@@ -20,7 +20,7 @@
 83C:\Users\Martin\scr\dwf-m5\desafio\node_modules\@parcel\fs\node_modules\.bin\rimraf132757007948657714 0
 103C:\Users\Martin\scr\dwf-m5\desafio\node_modules\core-js\internals\fix-regexp-well-known-symbol-logic.js132754480122390000 0
 87C:\Users\Martin\scr\dwf-m5\desafio\node_modules\@parcel\transformer-babel\src\config.js132742136706550000 0
-39C:\Users\Martin\scr\dwf-m5\desafio\dist132760540544813157 1
+39C:\Users\Martin\scr\dwf-m5\desafio\dist132777691358409782 1
 62C:\Users\Martin\scr\dwf-m5\desafio\node_modules\lodash\fp\T.js132680165832320000 0
 71C:\Users\Martin\scr\dwf-m5\desafio\node_modules\lmdb-store\src\misc.cpp132754480171470000 0
 79C:\Users\Martin\scr\dwf-m5\desafio\node_modules\caniuse-lite\data\regions\FI.js132754480124570000 0
@@ -219,7 +219,7 @@
 90C:\Users\Martin\scr\dwf-m5\desafio\node_modules\css-modules-loader-core\node_modules\chalk132754480541637916 1
 126C:\Users\Martin\scr\dwf-m5\desafio\node_modules\postcss-modules-extract-imports\node_modules\postcss\lib\terminal-highlight.js132723080661530000 0
 92C:\Users\Martin\scr\dwf-m5\desafio\node_modules\@babel\core\lib\config\files\module-types.js132754480121660000 0
-47C:\Users\Martin\scr\dwf-m5\desafio\src\state.ts132760540543780150 0
+47C:\Users\Martin\scr\dwf-m5\desafio\src\state.ts132777704337016580 0
 56C:\Users\Martin\scr\dwf-m5\desafio\node_modules\cssstyle132754480535318855 1
 62C:\Users\Martin\scr\dwf-m5\desafio\node_modules\xmlchars\xmlns132754480387946218 1
 50C:\Users\Martin\scr\dwf-m5\desafio\node_modules\ms132754480620455124 1
@@ -242,7 +242,7 @@
 92C:\Users\Martin\scr\dwf-m5\desafio\node_modules\icss-utils\node_modules\postcss\package.json132723080571310000 0
 85C:\Users\Martin\scr\dwf-m5\desafio\node_modules\uncss\node_modules\chalk\node_modules132754480282494261 1
 64C:\Users\Martin\scr\dwf-m5\desafio\node_modules\napi-build-utils132757007928457540 1
-57C:\Users\Martin\scr\dwf-m5\desafio\dist\index.b31310b1.js132760540544792374 0
+57C:\Users\Martin\scr\dwf-m5\desafio\dist\index.b31310b1.js132777691358409782 0
 77C:\Users\Martin\scr\dwf-m5\desafio\node_modules\is-bigint\.github\FUNDING.yml132742137311140000 0
 52C:\Users\Martin\scr\dwf-m5\desafio\src\pages\welcome132757900222508851 1
 95C:\Users\Martin\scr\dwf-m5\desafio\node_modules\sharp\vendor\8.10.6\include\librsvg-2.0\librsvg132612604640000000 1
@@ -15690,7 +15690,7 @@
 96C:\Users\Martin\scr\dwf-m5\desafio\node_modules\are-we-there-yet\node_modules\string_decoder\lib132757007929714418 1
 105C:\Users\Martin\scr\dwf-m5\desafio\node_modules\@parcel\runtime-js\src\helpers\browser\prefetch-loader.js132742136704690000 0
 84C:\Users\Martin\scr\dwf-m5\desafio\node_modules\@parcel\transformer-babel\lib\jsx.js132742136706550000 0
-61C:\Users\Martin\scr\dwf-m5\desafio\dist\index.b31310b1.js.map132760540544804726 0
+61C:\Users\Martin\scr\dwf-m5\desafio\dist\index.b31310b1.js.map132777691358409782 0
 102C:\Users\Martin\scr\dwf-m5\desafio\node_modules\are-we-there-yet\node_modules\string_decoder\README.md132723080622840000 0
 114C:\Users\Martin\scr\dwf-m5\desafio\node_modules\are-we-there-yet\node_modules\string_decoder\lib\string_decoder.js132723080622840000 0
 97C:\Users\Martin\scr\dwf-m5\desafio\node_modules\are-we-there-yet\node_modules\safe-buffer\LICENSE132723080587090000 0

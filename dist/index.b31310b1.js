@@ -660,6 +660,8 @@ const state = {
         },
         history: [
             {
+                jugador: 0,
+                bot: 0
             }
         ]
     },
@@ -669,16 +671,18 @@ const state = {
     },
     setState (newState) {
         this.data = newState;
-        for (const cb of this.listener)cb();
+        for (const cb of this.listener)cb(newState);
     },
     history () {
     },
     pushToHistory (play) {
         const currentState = this.getState();
         // currentState.history(play)
-        console.log("soy pushToHistory", play);
+        currentState.currentGame.myPlay = play.myPlay;
+        currentState.currentGame.computerPlay = play.computerPlay;
     },
     whoWins (myPlay, computerPlay) {
+        const currentState = this.getState();
         const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
         const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
         const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
@@ -695,9 +699,14 @@ const state = {
             empateConPiedra,
             empateContijera
         ];
-        if (gane.includes(true)) console.log("ganaste");
-        else if (empate.includes(true)) console.log("empataste");
-        else console.log("perdiste");
+        if (gane.includes(true)) {
+            currentState.history.jugador;
+            console.log("ganaste");
+        } else if (empate.includes(true)) console.log("empataste");
+        else {
+            currentState.history.bot++;
+            console.log("perdiste");
+        }
     },
     setMove (move) {
         const currentState = this.getState();
