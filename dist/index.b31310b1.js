@@ -588,11 +588,14 @@ class GamePage extends HTMLElement {
                     }
                 });
                 _state.state.pushToHistory({
-                    myPlay: miOpcion,
-                    computerPlay: computerMove
+                    ...lastState,
+                    history: {
+                        myPlay: miOpcion,
+                        computerPlay: computerMove
+                    }
                 });
                 _state.state.whoWins(miOpcion, computerMove);
-                console.log(_state.state.getState());
+                //console.log(state.getState())
                 //pone display none a los no elegidos
                 manos.forEach((item2)=>{
                     if (item2.id != "elegido") item2.id = "noElegido";
@@ -674,15 +677,19 @@ const state = {
         for (const cb of this.listener)cb(newState);
     },
     history () {
+        return this.data.history;
     },
     pushToHistory (play) {
         const currentState = this.getState();
-        // currentState.history(play)
-        currentState.currentGame.myPlay = play.myPlay;
-        currentState.currentGame.computerPlay = play.computerPlay;
+    // currentState.history(play)
+    //    currentState.history.push({
+    //         jugador:play.myPlay,
+    //         bot:play.computerPlay
+    //    })    
     },
     whoWins (myPlay, computerPlay) {
-        const currentState = this.getState();
+        const currentState = this.history();
+        console.log(currentState.pop());
         const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
         const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
         const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
@@ -699,14 +706,9 @@ const state = {
             empateConPiedra,
             empateContijera
         ];
-        if (gane.includes(true)) {
-            currentState.history.jugador;
-            console.log("ganaste");
-        } else if (empate.includes(true)) console.log("empataste");
-        else {
-            currentState.history.bot++;
-            console.log("perdiste");
-        }
+        if (gane.includes(true)) console.log("ganaste");
+        else if (empate.includes(true)) console.log("empataste");
+        else console.log("perdiste");
     },
     setMove (move) {
         const currentState = this.getState();

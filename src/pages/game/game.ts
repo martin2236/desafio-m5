@@ -106,13 +106,14 @@ class GamePage extends HTMLElement{
                 computerPlay:computerMove
                 } 
             })
-           state.pushToHistory({
-            myPlay:miOpcion,
+           state.pushToHistory({...lastState,history:{
+                myPlay:miOpcion,
             computerPlay:computerMove
+           }
            })
 
            state.whoWins(miOpcion,computerMove)
-        console.log(state.getState())
+        //console.log(state.getState())
             //pone display none a los no elegidos
            manos.forEach((item2)=>{
              if (item2.id != "elegido"){item2.id = "noElegido"}

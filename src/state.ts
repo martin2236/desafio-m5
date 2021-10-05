@@ -26,16 +26,20 @@ const state = {
              }
         },
         history(){
-        
+        return this.data.history
         },
         pushToHistory(play:Game){
             const currentState = this.getState()
            // currentState.history(play)
-           currentState.currentGame.myPlay = play.myPlay
-           currentState.currentGame.computerPlay = play.computerPlay
+          
+        //    currentState.history.push({
+        //         jugador:play.myPlay,
+        //         bot:play.computerPlay
+        //    })    
         },
         whoWins(myPlay:Jugada,computerPlay:Jugada){
-            const currentState = this.getState()
+            const currentState = this.history()
+            console.log(currentState.pop())
             const ganeConTijeras:boolean = myPlay == "tijera" && computerPlay == "papel"
             const ganeConPiedra:boolean = myPlay == "piedra" && computerPlay == "tijera" 
             const ganeConPapel:boolean = myPlay == "papel" && computerPlay == "piedra"
@@ -45,12 +49,12 @@ const state = {
             const gane = [ganeConPapel, ganeConPiedra, ganeConTijeras]
             const empate = [empateConPapel, empateConPiedra, empateContijera]
             if (gane.includes(true)){
-                currentState.history.jugador + 1
+               
                 console.log("ganaste")
             }else if(empate.includes(true)){
                 console.log("empataste")
             } else {
-                currentState.history.bot++
+              
                 console.log("perdiste")
                 //cambio
             }
