@@ -23,18 +23,7 @@ class WelcomePage extends HTMLElement{
             font-weight:700;
             line-height:70px;
         }
-        .boton{
-            display: block;
-            margin:0 auto 86px auto;
-            width:322px;
-            border: 10px solid #001997;
-            height:87px;
-            background: #006CFC;
-            border-radius:10px;
-            font-size:45px;
-            line-height:50px;
-            color: #D8FCFC;
-        }
+       
         .manos{
             display:flex;
             justify-content: space-evenly;
@@ -49,7 +38,8 @@ class WelcomePage extends HTMLElement{
         //o por atributos
         this.shadow.innerHTML=`
        <h1 class= "titulo">Piedra Papel ó Tijera</h1>
-       <button href="/rules" class= "boton">Empezar</button>
+       
+       <btn-el href="/rules" class= "boton" >Empezar</btn-el>
        <div class = "manos">
         <img src="${papel} " alt="papel">
        <img src="${piedra} " alt="piedra">

@@ -24,18 +24,7 @@ class RulesPage extends HTMLElement{
             line-height:40px;
             text-align:center;
         }
-        .boton{
-            display: block;
-            margin:0 auto 86px auto;
-            width:322px;
-            border: 10px solid #001997;
-            height:87px;
-            background: #006CFC;
-            border-radius:10px;
-            font-size:45px;
-            line-height:50px;
-            color: #D8FCFC;
-        }
+     
         .manos{
             display:flex;
             justify-content: space-evenly;
@@ -53,7 +42,7 @@ class RulesPage extends HTMLElement{
        Presioná jugar
        y elegí: piedra, papel o tijera antes de que pasen los 3 segundos.
        </p>
-       <button href="/game" class= "boton">¡Jugar!</button>
+       <btn-el href="/game" class= "boton">¡Jugar!</btn-el>
        <div class = "manos">
         <img src="${papel} " alt="papel">
        <img src="${piedra} " alt="piedra">

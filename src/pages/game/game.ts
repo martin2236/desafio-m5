@@ -18,12 +18,14 @@ class GamePage extends HTMLElement{
         this.alt=direccion[3].split(".")[0]
     }
     connectedCallback(){
-        this.render()
-     
-        state.subscribe(()=>{
-           const lastState = state.getState()
-        })
-        const style = document.createElement("style")
+       
+    this.render()
+        
+    state.subscribe(()=>{
+        state.getState()
+    })
+        
+    const style = document.createElement("style")
         style.innerHTML = `
         .container{
             height: 100vh;
@@ -33,7 +35,7 @@ class GamePage extends HTMLElement{
         }
      
        .opcion{
-           background-color:#FFCAB9;
+          
            width:103px;
            height: 235px;
            margin: 70px 5px 0 5px;
@@ -50,7 +52,7 @@ class GamePage extends HTMLElement{
        #botElegido{
            display: inherit;
            transform: rotate(180deg);
-           background-color:#FFCAB9;
+          
            position : absolute;
            top:0;
            left: 0;
@@ -99,21 +101,29 @@ class GamePage extends HTMLElement{
             reloj.id = "reloj"
             
 
-            //manipulacion del state
+            //le paso los valores de la jugada al currentGame
            const lastState = state.getState()
-            state.setState({...lastState,data:{
-                 myPlay:miOpcion,
-                computerPlay:computerMove
-                } 
-            })
-           state.pushToHistory({...lastState,history:{
+            state.setState({...lastState,
+                currentGame:{
+                    myPlay:miOpcion,
+                    computerPlay:computerMove 
+                },
+                history:[{
+                    jugador: miOpcion,
+                    bot: computerMove
+                }]
+                })
+            // le paso los valores de la jugada al history
+            const game = {
                 myPlay:miOpcion,
             computerPlay:computerMove
            }
-           })
+            state.pushToHistory(game)
+            
+           
 
            state.whoWins(miOpcion,computerMove)
-        //console.log(state.getState())
+        //console.log(lastState)
             //pone display none a los no elegidos
            manos.forEach((item2)=>{
              if (item2.id != "elegido"){item2.id = "noElegido"}

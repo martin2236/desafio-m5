@@ -457,11 +457,12 @@ function hmrAcceptRun(bundle, id) {
 },{}],"4aleK":[function(require,module,exports) {
 var _contador = require("./components/contador/contador");
 var _router = require("./router");
+var _index = require("./components/boton/index");
 window.addEventListener("load", ()=>{
     _router.router(location.pathname);
 });
 
-},{"./router":"b2iia","./components/contador/contador":"2KzZN"}],"b2iia":[function(require,module,exports) {
+},{"./router":"b2iia","./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT"}],"b2iia":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "router", ()=>router
@@ -555,10 +556,10 @@ class GamePage extends HTMLElement {
     connectedCallback() {
         this.render();
         _state.state.subscribe(()=>{
-            const lastState = _state.state.getState();
+            _state.state.getState();
         });
         const style = document.createElement("style");
-        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n     \n       .opcion{\n           background-color:#FFCAB9;\n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        bottom:0;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n           background-color:#FFCAB9;\n           position : absolute;\n           top:0;\n           left: 0;\n           right: 0;\n           margin-top:80px;\n           height: 235px;\n       }\n       #reloj{\n           display:none;\n       }\n        \n        `;
+        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n     \n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        bottom:0;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n          \n           position : absolute;\n           top:0;\n           left: 0;\n           right: 0;\n           margin-top:80px;\n           height: 235px;\n       }\n       #reloj{\n           display:none;\n       }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
@@ -578,24 +579,29 @@ class GamePage extends HTMLElement {
                 elegido.id = "elegido";
                 botOpcion.id = "botElegido";
                 reloj.id = "reloj";
-                //manipulacion del state
+                //le paso los valores de la jugada al currentGame
                 const lastState = _state.state.getState();
                 _state.state.setState({
                     ...lastState,
-                    data: {
+                    currentGame: {
                         myPlay: miOpcion,
                         computerPlay: computerMove
-                    }
+                    },
+                    history: [
+                        {
+                            jugador: miOpcion,
+                            bot: computerMove
+                        }
+                    ]
                 });
-                _state.state.pushToHistory({
-                    ...lastState,
-                    history: {
-                        myPlay: miOpcion,
-                        computerPlay: computerMove
-                    }
-                });
+                // le paso los valores de la jugada al history
+                const game = {
+                    myPlay: miOpcion,
+                    computerPlay: computerMove
+                };
+                _state.state.pushToHistory(game);
                 _state.state.whoWins(miOpcion, computerMove);
-                //console.log(state.getState())
+                //console.log(lastState)
                 //pone display none a los no elegidos
                 manos.forEach((item2)=>{
                     if (item2.id != "elegido") item2.id = "noElegido";
@@ -663,8 +669,8 @@ const state = {
         },
         history: [
             {
-                jugador: 0,
-                bot: 0
+                jugador: "",
+                bot: ""
             }
         ]
     },
@@ -681,15 +687,13 @@ const state = {
     },
     pushToHistory (play) {
         const currentState = this.getState();
-    // currentState.history(play)
-    //    currentState.history.push({
-    //         jugador:play.myPlay,
-    //         bot:play.computerPlay
-    //    })    
+        currentState.history.push({
+            jugador: play.myPlay,
+            bot: play.computerPlay
+        });
+        console.log(currentState);
     },
     whoWins (myPlay, computerPlay) {
-        const currentState = this.history();
-        console.log(currentState.pop());
         const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
         const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
         const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
@@ -734,13 +738,13 @@ class WelcomePage extends HTMLElement {
     connectedCallback() {
         this.render();
         const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .titulo{\n            margin:115px auto 74px auto;\n            width:284px;\n            height:204px;\n            font-size:80px;\n            color: #009048;\n            font-weight:700;\n            line-height:70px;\n        }\n        .boton{\n            display: block;\n            margin:0 auto 86px auto;\n            width:322px;\n            border: 10px solid #001997;\n            height:87px;\n            background: #006CFC;\n            border-radius:10px;\n            font-size:45px;\n            line-height:50px;\n            color: #D8FCFC;\n        }\n        .manos{\n            display:flex;\n            justify-content: space-evenly;\n            \n        }\n        \n        `;
+        style.innerHTML = `\n     \n        .titulo{\n            margin:115px auto 74px auto;\n            width:284px;\n            height:204px;\n            font-size:80px;\n            color: #009048;\n            font-weight:700;\n            line-height:70px;\n        }\n       \n        .manos{\n            display:flex;\n            justify-content: space-evenly;\n            \n        }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
-        this.shadow.innerHTML = `\n       <h1 class= "titulo">Piedra Papel ó Tijera</h1>\n       <button href="/rules" class= "boton">Empezar</button>\n       <div class = "manos">\n        <img src="${papel} " alt="papel">\n       <img src="${piedra} " alt="piedra">\n       <img src="${tijera} " alt="tijera">\n       </div>\n      `;
+        this.shadow.innerHTML = `\n       <h1 class= "titulo">Piedra Papel ó Tijera</h1>\n       \n       <btn-el href="/rules" class= "boton" >Empezar</btn-el>\n       <div class = "manos">\n        <img src="${papel} " alt="papel">\n       <img src="${piedra} " alt="piedra">\n       <img src="${tijera} " alt="tijera">\n       </div>\n      `;
         const boton = this.shadow.querySelector(".boton");
         boton.addEventListener("click", function(e) {
             const ruta = this.getAttribute("href");
@@ -765,13 +769,13 @@ class RulesPage extends HTMLElement {
     connectedCallback() {
         this.render();
         const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .p{\n            margin:115px auto 45px auto;\n            width:317px;\n            height:240px;\n            font-size:40px;\n            color: #009048;\n            font-weight:600;\n            line-height:40px;\n            text-align:center;\n        }\n        .boton{\n            display: block;\n            margin:0 auto 86px auto;\n            width:322px;\n            border: 10px solid #001997;\n            height:87px;\n            background: #006CFC;\n            border-radius:10px;\n            font-size:45px;\n            line-height:50px;\n            color: #D8FCFC;\n        }\n        .manos{\n            display:flex;\n            justify-content: space-evenly;\n            \n        }\n        \n        `;
+        style.innerHTML = `\n     \n        .p{\n            margin:115px auto 45px auto;\n            width:317px;\n            height:240px;\n            font-size:40px;\n            color: #009048;\n            font-weight:600;\n            line-height:40px;\n            text-align:center;\n        }\n     \n        .manos{\n            display:flex;\n            justify-content: space-evenly;\n            \n        }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
-        this.shadow.innerHTML = `\n       <p class = "p">\n       Presioná jugar\n       y elegí: piedra, papel o tijera antes de que pasen los 3 segundos.\n       </p>\n       <button href="/game" class= "boton">¡Jugar!</button>\n       <div class = "manos">\n        <img src="${papel} " alt="papel">\n       <img src="${piedra} " alt="piedra">\n       <img src="${tijera} " alt="tijera">\n       </div>\n      `;
+        this.shadow.innerHTML = `\n       <p class = "p">\n       Presioná jugar\n       y elegí: piedra, papel o tijera antes de que pasen los 3 segundos.\n       </p>\n       <btn-el href="/game" class= "boton">¡Jugar!</btn-el>\n       <div class = "manos">\n        <img src="${papel} " alt="papel">\n       <img src="${piedra} " alt="piedra">\n       <img src="${tijera} " alt="tijera">\n       </div>\n      `;
         const boton = this.shadow.querySelector(".boton");
         boton.addEventListener("click", function(e) {
             const ruta = this.getAttribute("href");
@@ -811,6 +815,27 @@ class Contador extends HTMLElement {
     }
 }
 customElements.define("contador-el", Contador);
+
+},{}],"g4sMT":[function(require,module,exports) {
+class Boton extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .boton{\n            display: block;\n            margin:0 auto 86px auto;\n            width:322px;\n            border: 10px solid #001997;\n            height:87px;\n            background: #006CFC;\n            border-radius:10px;\n            font-size:45px;\n            line-height:50px;\n            color: #D8FCFC;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        const texto = this.textContent;
+        this.shadow.innerHTML = `\n        <button class="boton">${texto}</button>\n\n      `;
+    }
+}
+customElements.define("btn-el", Boton);
 
 },{}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
 
