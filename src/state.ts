@@ -52,6 +52,7 @@ const state = {
             } else {
                 currentState.history.bot++
                 console.log("perdiste")
+                //cambio
             }
         },
         setMove(move:Jugada){
