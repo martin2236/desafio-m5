@@ -119,7 +119,7 @@ class GamePage extends HTMLElement{
             computerPlay:computerMove
            }
             state.pushToHistory(game)
-            
+            //algo
            
 
            state.whoWins(miOpcion,computerMove)
