@@ -33,7 +33,16 @@ class GamePage extends HTMLElement{
         .bot{
             display:none
         }
-     
+        .h1{
+            display:none
+        }
+        #h1{
+            display: inherit;
+            position:absolute;
+            color:red;
+            top:50%;
+            z-index:1000;
+        }
        .opcion{
           
            width:103px;
@@ -60,9 +69,7 @@ class GamePage extends HTMLElement{
            margin-top:80px;
            height: 235px;
        }
-       #reloj{
-           display:none;
-       }
+      
        .ganaste{
            display:none;
        }
@@ -86,8 +93,9 @@ class GamePage extends HTMLElement{
         //o por atributos
         this.shadow.innerHTML=`
         <div class= "container">
-        <contador-el class="reloj"></contador-el>
+        <contador-el class="reloj">4</contador-el>
         <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">
+        <h1 class="h1">Empate!!!</h1>
         <img class= "opcion"  src="${papel} " alt="papel">
         <img class = "opcion" src="${piedra} " alt="piedra">
         <img class="opcion" src="${tijera} " alt="tijera">
@@ -102,7 +110,7 @@ class GamePage extends HTMLElement{
       const reloj = this.shadow.querySelector(".reloj")
       const ganaste = this.shadow.querySelector(".ganaste")
       const perdiste = this.shadow.querySelector(".perdiste")
-
+      const empate = this.shadow.querySelector("h1")
       //itera los elementos img
     manos.forEach((item)=>{
         item.addEventListener("click",function(e){
@@ -110,15 +118,31 @@ class GamePage extends HTMLElement{
             const miOpcion = this.getAttribute("alt") 
             const elegido = e.target as any
             const computerMove =  botOpcion.getAttribute("alt")
+            
            //muestra las opciones elegidas
-           
             elegido.id = "elegido"
             botOpcion.id = "botElegido"
-            reloj.id = "reloj"
-            
+
+           //si se hace click en una opcion remueve el elemento contador
+           //si contador llega a 0 reinicia el juego 
+            if(reloj.textContent == "0"){
+                goto("/rules")
+            }
+            reloj.remove()
+          
+        
+           // consulta con el estado quien gano y muestra el componente correspondiente
+            if (state.whoWins(miOpcion,computerMove)=="ganaste"){
+                    setTimeout(function(){ ganaste.id = "ganaste" }, 500);
+           }else if(state.whoWins(miOpcion,computerMove)=="empate"){
+                    empate.id = "h1"
+                    setTimeout(function(){goto("/game")  }, 1500);
+           } else {
+            setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
+           }
 
             //le paso los valores de la jugada al currentGame
-           const lastState = state.getState()
+            const lastState = state.getState()
             state.setState({...lastState,
                 currentGame:{
                     myPlay:miOpcion,
@@ -129,21 +153,6 @@ class GamePage extends HTMLElement{
                     bot: computerMove
                 }]
                 })
-            // le paso los valores de la jugada al history
-            const game = {
-                myPlay:miOpcion,
-            computerPlay:computerMove
-           }
-            state.pushToHistory(game)
-        
-           // consulta con el estado quien gano y muestra el componente correspondiente
-            if (state.whoWins(miOpcion,computerMove)=="ganaste"){
-                    setTimeout(function(){ ganaste.id = "ganaste" }, 500);
-           }else if(state.whoWins(miOpcion,computerMove)=="empate"){
-                    setTimeout(function(){goto("/game")  }, 1500);
-           } else {
-            setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
-           }
         
             //pone display none a los no elegidos
            manos.forEach((item2)=>{
@@ -153,7 +162,8 @@ class GamePage extends HTMLElement{
         })
      
     })
-   
+    
+         
     }
 }
 customElements.define("game-el",GamePage)

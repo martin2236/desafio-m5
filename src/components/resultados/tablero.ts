@@ -1,3 +1,5 @@
+import { state } from "../../state";
+
 const tablero = require("url:../../img/rectangle.png");
 class Resultado extends HTMLElement{
     shadow:ShadowRoot
@@ -12,8 +14,8 @@ class Resultado extends HTMLElement{
         <img class="tablero"  src="${tablero}" alt="tablero">
         <div class="contenedor">
             <h1 class = "titulo">Record</h1>
-            <p class = "p">Vos:</p>
-            <p class = "p">Máquina:</p>
+            <p class = "p">Vos:${state.history().jugador}</p>
+            <p class = "p">Máquina:${state.history().bot}</p>
         </div>
        
 

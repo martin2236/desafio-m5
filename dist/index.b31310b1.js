@@ -565,18 +565,19 @@ class GamePage extends HTMLElement {
             _state.state.getState();
         });
         const style = document.createElement("style");
-        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n     \n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        bottom:0;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n          \n           position : absolute;\n           top:0;\n           left: 0;\n           right: 0;\n           margin-top:80px;\n           height: 235px;\n       }\n       #reloj{\n           display:none;\n       }\n       .ganaste{\n           display:none;\n       }\n       .perdiste{\n           display:none;\n       }\n       #ganaste{\n        display: inherit;\n       }\n       #perdiste{\n        display: inherit;\n       }\n        \n        `;
+        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n        .h1{\n            display:none\n        }\n        #h1{\n            display: inherit;\n            position:absolute;\n            color:red;\n            top:50%;\n            z-index:1000;\n        }\n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        bottom:0;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n          \n           position : absolute;\n           top:0;\n           left: 0;\n           right: 0;\n           margin-top:80px;\n           height: 235px;\n       }\n      \n       .ganaste{\n           display:none;\n       }\n       .perdiste{\n           display:none;\n       }\n       #ganaste{\n        display: inherit;\n       }\n       #perdiste{\n        display: inherit;\n       }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
-        this.shadow.innerHTML = `\n        <div class= "container">\n        <contador-el class="reloj"></contador-el>\n        <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n        <img class= "opcion"  src="${papel} " alt="papel">\n        <img class = "opcion" src="${piedra} " alt="piedra">\n        <img class="opcion" src="${tijera} " alt="tijera">\n        <ganador-el class="ganaste"></ganador-el>\n        <perdedor-el class="perdiste"></perdedor-el>\n     \n        </div>\n       \n      `;
+        this.shadow.innerHTML = `\n        <div class= "container">\n        <contador-el class="reloj">4</contador-el>\n        <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n        <h1 class="h1">Empate!!!</h1>\n        <img class= "opcion"  src="${papel} " alt="papel">\n        <img class = "opcion" src="${piedra} " alt="piedra">\n        <img class="opcion" src="${tijera} " alt="tijera">\n        <ganador-el class="ganaste"></ganador-el>\n        <perdedor-el class="perdiste"></perdedor-el>\n     \n        </div>\n       \n      `;
         var manos = this.shadow.querySelectorAll(".opcion");
         const botOpcion = this.shadow.querySelector(".bot");
         const reloj = this.shadow.querySelector(".reloj");
         const ganaste = this.shadow.querySelector(".ganaste");
         const perdiste = this.shadow.querySelector(".perdiste");
+        const empate = this.shadow.querySelector("h1");
         //itera los elementos img
         manos.forEach((item)=>{
             item.addEventListener("click", function(e) {
@@ -586,7 +587,22 @@ class GamePage extends HTMLElement {
                 //muestra las opciones elegidas
                 elegido.id = "elegido";
                 botOpcion.id = "botElegido";
-                reloj.id = "reloj";
+                //si se hace click en una opcion remueve el elemento contador
+                //si contador llega a 0 reinicia el juego 
+                if (reloj.textContent == "0") _router.goto("/rules");
+                reloj.remove();
+                // consulta con el estado quien gano y muestra el componente correspondiente
+                if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") setTimeout(function() {
+                    ganaste.id = "ganaste";
+                }, 500);
+                else if (_state.state.whoWins(miOpcion, computerMove) == "empate") {
+                    empate.id = "h1";
+                    setTimeout(function() {
+                        _router.goto("/game");
+                    }, 1500);
+                } else setTimeout(function() {
+                    perdiste.id = "perdiste";
+                }, 1000);
                 //le paso los valores de la jugada al currentGame
                 const lastState = _state.state.getState();
                 _state.state.setState({
@@ -602,22 +618,6 @@ class GamePage extends HTMLElement {
                         }
                     ]
                 });
-                // le paso los valores de la jugada al history
-                const game = {
-                    myPlay: miOpcion,
-                    computerPlay: computerMove
-                };
-                _state.state.pushToHistory(game);
-                // consulta con el estado quien gano y muestra el componente correspondiente
-                if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") setTimeout(function() {
-                    ganaste.id = "ganaste";
-                }, 500);
-                else if (_state.state.whoWins(miOpcion, computerMove) == "empate") setTimeout(function() {
-                    _router.goto("/game");
-                }, 1500);
-                else setTimeout(function() {
-                    perdiste.id = "perdiste";
-                }, 1000);
                 //pone display none a los no elegidos
                 manos.forEach((item2)=>{
                     if (item2.id != "elegido") item2.id = "noElegido";
@@ -683,12 +683,10 @@ const state = {
             myPlay: "",
             computerPlay: ""
         },
-        history: [
-            {
-                jugador: "",
-                bot: ""
-            }
-        ]
+        score: {
+            jugador: 0,
+            bot: 0
+        }
     },
     listener: [],
     getState () {
@@ -699,17 +697,17 @@ const state = {
         for (const cb of this.listener)cb(newState);
     },
     history () {
-        return this.data.history;
+        return this.data.score;
     },
     pushToHistory (play) {
         const currentState = this.getState();
-        currentState.history.push({
-            jugador: play.myPlay,
-            bot: play.computerPlay
-        });
-        console.log(currentState);
+    //     currentState.history.push({
+    //         jugador:play.myPlay,
+    //         bot:play.computerPlay
+    //    }); 
     },
     whoWins (myPlay, computerPlay) {
+        const currentState = this.getState().score;
         const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
         const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
         const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
@@ -726,9 +724,14 @@ const state = {
             empateConPiedra,
             empateContijera
         ];
-        if (gane.includes(true)) return "ganaste";
-        else if (empate.includes(true)) return "empate";
-        else return "perdiste";
+        if (gane.includes(true)) {
+            currentState.jugador++;
+            return "ganaste";
+        } else if (empate.includes(true)) return "empate";
+        else {
+            currentState.bot++;
+            return "perdiste";
+        }
     },
     setMove (move) {
         const currentState = this.getState();
@@ -802,7 +805,8 @@ class RulesPage extends HTMLElement {
 customElements.define("rules-el", RulesPage);
 
 },{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"2KzZN":[function(require,module,exports) {
-var _router = require("../../router");
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
 class Contador extends HTMLElement {
     constructor(){
         super();
@@ -822,21 +826,18 @@ class Contador extends HTMLElement {
         //o por atributos
         this.shadow.innerHTML = `\n       <div class = "contador"></div>\n\n      `;
         var tiempo = this.shadow.querySelector(".contador");
-        var numero = 3;
+        var numero = 4;
         var algo = setInterval(cuentaRegresiva, 1000);
         function cuentaRegresiva(number) {
             numero--;
-            if (numero == 0) {
-                clearInterval(algo);
-                _router.goto("/rules");
-            }
+            if (numero == 0) clearInterval(algo);
             tiempo.innerHTML = `${numero}`;
         }
     }
 }
 customElements.define("contador-el", Contador);
 
-},{"../../router":"b2iia"}],"g4sMT":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"g4sMT":[function(require,module,exports) {
 class Boton extends HTMLElement {
     constructor(){
         super();
@@ -873,7 +874,7 @@ class Ganador extends HTMLElement {
         this.shadow.appendChild(style);
     }
     render() {
-        this.shadow.innerHTML = `\n       <div class="container">\n       <ganaste-el></ganaste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/welcome" class= "boton">Volver a jugar</btn-el>\n       </div>\n\n      `;
+        this.shadow.innerHTML = `\n       <div class="container">\n       <ganaste-el></ganaste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>\n       </div>\n\n      `;
         const boton = this.shadow.querySelector(".boton");
         boton.addEventListener("click", function(e) {
             const ruta = this.getAttribute("href");
@@ -906,6 +907,7 @@ customElements.define("ganaste-el", Estrella);
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "ganaste.f9f1f8cd.png";
 
 },{"./helpers/bundle-url":"8YnfL"}],"5vuP3":[function(require,module,exports) {
+var _state = require("../../state");
 const tablero = require("url:../../img/rectangle.png");
 class Resultado extends HTMLElement {
     constructor(){
@@ -916,7 +918,7 @@ class Resultado extends HTMLElement {
         this.render();
     }
     render() {
-        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:</p>\n            <p class = "p">Máquina:</p>\n        </div>\n       \n\n        `;
+        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.history().jugador}</p>\n            <p class = "p">Máquina:${_state.state.history().bot}</p>\n        </div>\n       \n\n        `;
         const style = document.createElement("style");
         style.innerHTML = `\n      \n        .tablero{\n            display:block;\n            margin:11px auto;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 55px;\n            margin-bottom:0;\n        }\n        .p{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 45px;\n            margin-bottom:0;\n            margin-top:0;\n            text-align:end;\n        }\n        .contenedor{\n            position:absolute;\n            top:410px;\n            left:50%; \n            transform:translate(-50%, -50%);\n        }\n        \n        `;
         this.shadow.appendChild(style);
@@ -924,7 +926,7 @@ class Resultado extends HTMLElement {
 }
 customElements.define("tablero-el", Resultado);
 
-},{"url:../../img/rectangle.png":"1X6Cx"}],"1X6Cx":[function(require,module,exports) {
+},{"url:../../img/rectangle.png":"1X6Cx","../../state":"28XHA"}],"1X6Cx":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "rectangle.a4eaf4ed.png";
 
 },{"./helpers/bundle-url":"8YnfL"}],"6JpHo":[function(require,module,exports) {
@@ -943,7 +945,7 @@ class Perdedor extends HTMLElement {
         this.shadow.appendChild(style);
     }
     render() {
-        this.shadow.innerHTML = `\n       <div class="container">\n       <perdiste-el></perdiste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/welcome" class= "boton">Volver a jugar</btn-el>\n       </div>\n\n      `;
+        this.shadow.innerHTML = `\n       <div class="container">\n       <perdiste-el></perdiste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>\n       </div>\n\n      `;
         const boton = this.shadow.querySelector(".boton");
         boton.addEventListener("click", function(e) {
             const ruta = this.getAttribute("href");

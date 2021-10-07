@@ -10,10 +10,10 @@ const state = {
                 myPlay:"",
                 computerPlay:"" 
             },
-        history:[{
-            jugador: "",
-            bot: ""
-        }]
+        score:{
+            jugador: 0,
+            bot: 0
+        }
         },
         listener:[],
         getState(){
@@ -22,24 +22,23 @@ const state = {
         setState(newState){
            this.data = newState;
              for (const cb of this.listener){
-                 cb(newState)
+                 cb(newState);
              }
         },
         history(){
-        return this.data.history
+        return this.data.score
         },
         pushToHistory(play:Game){
-            const currentState = this.getState()
+            const currentState = this.getState();
             
-            currentState.history.push({
-                jugador:play.myPlay,
-                bot:play.computerPlay
-           }) 
-              
-           console.log(currentState)
+        //     currentState.history.push({
+        //         jugador:play.myPlay,
+        //         bot:play.computerPlay
+        //    }); 
+       
         },
         whoWins(myPlay:Jugada,computerPlay:Jugada){
-            
+            const currentState = this.getState().score;
             const ganeConTijeras:boolean = myPlay == "tijera" && computerPlay == "papel"
             const ganeConPiedra:boolean = myPlay == "piedra" && computerPlay == "tijera" 
             const ganeConPapel:boolean = myPlay == "papel" && computerPlay == "piedra"
@@ -49,13 +48,15 @@ const state = {
             const gane = [ganeConPapel, ganeConPiedra, ganeConTijeras]
             const empate = [empateConPapel, empateConPiedra, empateContijera]
             if (gane.includes(true)){
+                currentState.jugador ++
                 return "ganaste"
             }else if(empate.includes(true)){
                 return "empate"
             } else {
+                currentState.bot++
                 return "perdiste"
             }
-            
+           
         },
         setMove(move:Jugada){
             const currentState = this.getState()

@@ -32,7 +32,7 @@ class Perdedor extends HTMLElement{
        <div class="container">
        <perdiste-el></perdiste-el>
        <tablero-el></tablero-el>
-       <btn-el href="/welcome" class= "boton">Volver a jugar</btn-el>
+       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>
        </div>
 
       `

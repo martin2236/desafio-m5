@@ -31,7 +31,7 @@ class Ganador extends HTMLElement{
        <div class="container">
        <ganaste-el></ganaste-el>
        <tablero-el></tablero-el>
-       <btn-el href="/welcome" class= "boton">Volver a jugar</btn-el>
+       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>
        </div>
 
       `
