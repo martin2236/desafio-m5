@@ -1,3 +1,4 @@
+import { goto } from "../../router";
 class Ganador extends HTMLElement{
     shadow:ShadowRoot
     constructor(){
@@ -27,10 +28,21 @@ class Ganador extends HTMLElement{
     render(){
         
         this.shadow.innerHTML=`
-       <div class=""></div>
+       <div class="container">
+       <ganaste-el></ganaste-el>
+       <tablero-el></tablero-el>
+       <btn-el href="/welcome" class= "boton">Volver a jugar</btn-el>
+       </div>
 
       `
-        
+      const boton = this.shadow.querySelector(".boton")
+      boton.addEventListener("click",function(e){
+         const ruta = this.getAttribute("href")
+         goto(ruta)
+      })
+
     }
+        
+    
 }
 customElements.define("ganador-el",Ganador)

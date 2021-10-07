@@ -49,14 +49,11 @@ const state = {
             const gane = [ganeConPapel, ganeConPiedra, ganeConTijeras]
             const empate = [empateConPapel, empateConPiedra, empateContijera]
             if (gane.includes(true)){
-                
-                console.log("ganaste")
+                return "ganaste"
             }else if(empate.includes(true)){
-                console.log("empataste")
+                return "empate"
             } else {
-               
-                console.log("perdiste")
-                //cambio
+                return "perdiste"
             }
             
         },

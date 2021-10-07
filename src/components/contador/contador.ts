@@ -1,3 +1,4 @@
+import { goto } from "../../router";
 class Contador extends HTMLElement{
     shadow:ShadowRoot
     contador: number
@@ -42,8 +43,12 @@ class Contador extends HTMLElement{
         
         function cuentaRegresiva(number){
             numero--
-            if (numero == 0)clearInterval(algo)
+            if (numero == 0){
+                clearInterval(algo)
+                goto("/rules")
+            }
             tiempo.innerHTML = `${numero}`
+
         }
     }
 }

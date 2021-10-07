@@ -63,6 +63,18 @@ class GamePage extends HTMLElement{
        #reloj{
            display:none;
        }
+       .ganaste{
+           display:none;
+       }
+       .perdiste{
+           display:none;
+       }
+       #ganaste{
+        display: inherit;
+       }
+       #perdiste{
+        display: inherit;
+       }
         
         `
         this.shadow.appendChild(style)
@@ -79,6 +91,8 @@ class GamePage extends HTMLElement{
         <img class= "opcion"  src="${papel} " alt="papel">
         <img class = "opcion" src="${piedra} " alt="piedra">
         <img class="opcion" src="${tijera} " alt="tijera">
+        <ganador-el class="ganaste"></ganador-el>
+        <perdedor-el class="perdiste"></perdedor-el>
      
         </div>
        
@@ -86,6 +100,8 @@ class GamePage extends HTMLElement{
      var manos = this.shadow.querySelectorAll(".opcion")
       const botOpcion = this.shadow.querySelector(".bot") as any
       const reloj = this.shadow.querySelector(".reloj")
+      const ganaste = this.shadow.querySelector(".ganaste")
+      const perdiste = this.shadow.querySelector(".perdiste")
 
       //itera los elementos img
     manos.forEach((item)=>{
@@ -119,11 +135,16 @@ class GamePage extends HTMLElement{
             computerPlay:computerMove
            }
             state.pushToHistory(game)
-            //algo
-           
-
-           state.whoWins(miOpcion,computerMove)
-        //console.log(lastState)
+        
+           // consulta con el estado quien gano y muestra el componente correspondiente
+            if (state.whoWins(miOpcion,computerMove)=="ganaste"){
+                    setTimeout(function(){ ganaste.id = "ganaste" }, 500);
+           }else if(state.whoWins(miOpcion,computerMove)=="empate"){
+                    setTimeout(function(){goto("/game")  }, 1500);
+           } else {
+            setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
+           }
+        
             //pone display none a los no elegidos
            manos.forEach((item2)=>{
              if (item2.id != "elegido"){item2.id = "noElegido"}
