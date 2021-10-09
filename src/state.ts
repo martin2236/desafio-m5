@@ -13,7 +13,11 @@ const state = {
         score:{
             jugador: 0,
             bot: 0
-        }
+        },
+        history:[{
+            jugador:"",
+            bot:""
+        }]
         },
         listener:[],
         getState(){
@@ -26,15 +30,15 @@ const state = {
              }
         },
         history(){
-        return this.data.score
+        return this.data.history
         },
         pushToHistory(play:Game){
             const currentState = this.getState();
             
-        //     currentState.history.push({
-        //         jugador:play.myPlay,
-        //         bot:play.computerPlay
-        //    }); 
+            currentState.history.push({
+                jugador:play.myPlay,
+                bot:play.computerPlay
+           }); 
        
         },
         whoWins(myPlay:Jugada,computerPlay:Jugada){

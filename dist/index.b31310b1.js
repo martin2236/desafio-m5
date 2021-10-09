@@ -616,6 +616,13 @@ class GamePage extends HTMLElement {
                         perdiste.id = "perdiste";
                     }, 1000);
                 }
+                //le paso las jugadas a state.pushtoHistory
+                const juego = {
+                    myPlay: miOpcion,
+                    computerPlay: computerMove
+                };
+                _state.state.pushToHistory(juego);
+                console.log(_state.state.history());
                 //pone display none a los no elegidos
                 manos.forEach((item2)=>{
                     if (item2.id != "elegido") item2.id = "noElegido";
@@ -684,7 +691,13 @@ const state = {
         score: {
             jugador: 0,
             bot: 0
-        }
+        },
+        history: [
+            {
+                jugador: "",
+                bot: ""
+            }
+        ]
     },
     listener: [],
     getState () {
@@ -695,14 +708,14 @@ const state = {
         for (const cb of this.listener)cb(newState);
     },
     history () {
-        return this.data.score;
+        return this.data.history;
     },
     pushToHistory (play) {
         const currentState = this.getState();
-    //     currentState.history.push({
-    //         jugador:play.myPlay,
-    //         bot:play.computerPlay
-    //    }); 
+        currentState.history.push({
+            jugador: play.myPlay,
+            bot: play.computerPlay
+        });
     },
     whoWins (myPlay, computerPlay) {
         //const currentState = this.getState().score;
@@ -913,7 +926,7 @@ class Resultado extends HTMLElement {
         this.render();
     }
     render() {
-        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.history().jugador}</p>\n            <p class = "p">Máquina:${_state.state.history().bot}</p>\n        </div>\n       \n\n        `;
+        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.getState().score.jugador}</p>\n            <p class = "p">Máquina:${_state.state.getState().score.bot}</p>\n        </div>\n       \n\n        `;
         const style = document.createElement("style");
         style.innerHTML = `\n      \n        .tablero{\n            display:block;\n            margin:11px auto;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 55px;\n            margin-bottom:0;\n        }\n        .p{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 45px;\n            margin-bottom:0;\n            margin-top:0;\n            text-align:end;\n        }\n        .contenedor{\n            position:absolute;\n            top:410px;\n            left:50%; \n            transform:translate(-50%, -50%);\n        }\n        \n        `;
         this.shadow.appendChild(style);

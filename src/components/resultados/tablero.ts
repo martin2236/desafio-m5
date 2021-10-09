@@ -14,8 +14,8 @@ class Resultado extends HTMLElement{
         <img class="tablero"  src="${tablero}" alt="tablero">
         <div class="contenedor">
             <h1 class = "titulo">Record</h1>
-            <p class = "p">Vos:${state.history().jugador}</p>
-            <p class = "p">Máquina:${state.history().bot}</p>
+            <p class = "p">Vos:${state.getState().score.jugador}</p>
+            <p class = "p">Máquina:${state.getState().score.bot}</p>
         </div>
        
 

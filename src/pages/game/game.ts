@@ -135,8 +135,7 @@ class GamePage extends HTMLElement{
                     myPlay:miOpcion,
                     computerPlay:computerMove 
                 },
-                
-                })
+            })
 
                 
            // consulta con el estado quien gano y muestra el componente correspondiente
@@ -151,6 +150,16 @@ class GamePage extends HTMLElement{
             setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
            }
 
+           
+
+           //le paso las jugadas a state.pushtoHistory
+            const juego = {
+                myPlay:miOpcion,
+                computerPlay:computerMove
+            }
+           state.pushToHistory(juego)
+
+           console.log(state.history())
                
             //pone display none a los no elegidos
            manos.forEach((item2)=>{
