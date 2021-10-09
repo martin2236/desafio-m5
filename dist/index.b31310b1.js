@@ -460,14 +460,16 @@ var _router = require("./router");
 var _index = require("./components/boton/index");
 var _ganador = require("./components/estrellas/ganador");
 var _perdedor = require("./components/estrellas/perdedor");
+var _empate = require("./components/estrellas/empate");
 var _tablero = require("./components/resultados/tablero");
 var _index1 = require("./components/ganador/index");
 var _index2 = require("./components/perdedor/index");
+var _index3 = require("./components/empate/index");
 window.addEventListener("load", ()=>{
     _router.router(location.pathname);
 });
 
-},{"./router":"b2iia","./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/ganador/index":"5B7I0","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/perdedor/index":"6JpHo","./components/estrellas/perdedor":"9BAgK"}],"b2iia":[function(require,module,exports) {
+},{"./router":"b2iia","./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/ganador/index":"5B7I0","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/perdedor/index":"6JpHo","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./components/empate/index":"ek0QC"}],"b2iia":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "router", ()=>router
@@ -561,48 +563,33 @@ class GamePage extends HTMLElement {
     }
     connectedCallback() {
         this.render();
-        _state.state.subscribe(()=>{
-            _state.state.getState();
-        });
         const style = document.createElement("style");
-        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n        .h1{\n            display:none\n        }\n        #h1{\n            display: inherit;\n            position:absolute;\n            color:red;\n            top:50%;\n            z-index:1000;\n        }\n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        bottom:0;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n          \n           position : absolute;\n           top:0;\n           left: 0;\n           right: 0;\n           margin-top:80px;\n           height: 235px;\n       }\n      \n       .ganaste{\n           display:none;\n       }\n       .perdiste{\n           display:none;\n       }\n       #ganaste{\n        display: inherit;\n       }\n       #perdiste{\n        display: inherit;\n       }\n        \n        `;
+        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n        .h1{\n            display:none\n        }\n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        left:35%;\n        bottom:-80px;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n           position : absolute;\n           top:-80px;\n           left: 35%;\n           \n           margin-top:80px;\n           height: 235px;\n       }\n      \n       .ganaste{\n           display:none;\n       }\n       .perdiste{\n           display:none;\n       }\n       #ganaste{\n        display: inherit;\n       }\n       #perdiste{\n        display: inherit;\n       }\n       .empate{\n           display:none;\n       }\n       #empate{\n           display:inherit;\n       }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
-        this.shadow.innerHTML = `\n        <div class= "container">\n        <contador-el class="reloj">4</contador-el>\n        <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n        <h1 class="h1">Empate!!!</h1>\n        <img class= "opcion"  src="${papel} " alt="papel">\n        <img class = "opcion" src="${piedra} " alt="piedra">\n        <img class="opcion" src="${tijera} " alt="tijera">\n        <ganador-el class="ganaste"></ganador-el>\n        <perdedor-el class="perdiste"></perdedor-el>\n     \n        </div>\n       \n      `;
+        this.shadow.innerHTML = `\n        <div class= "container">\n        <contador-el class="reloj">4</contador-el>\n        <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n        <img class= "opcion"  src="${papel} " alt="papel">\n        <img class = "opcion" src="${piedra} " alt="piedra">\n        <img class="opcion" src="${tijera} " alt="tijera">\n        <ganador-el class="ganaste"></ganador-el>\n        <perdedor-el class="perdiste"></perdedor-el>\n        <empate-el class="empate"></empate-el>\n     \n        </div>\n       \n      `;
         var manos = this.shadow.querySelectorAll(".opcion");
         const botOpcion = this.shadow.querySelector(".bot");
         const reloj = this.shadow.querySelector(".reloj");
         const ganaste = this.shadow.querySelector(".ganaste");
         const perdiste = this.shadow.querySelector(".perdiste");
-        const empate = this.shadow.querySelector("h1");
+        const empataste = this.shadow.querySelector(".empate");
         //itera los elementos img
         manos.forEach((item)=>{
             item.addEventListener("click", function(e) {
                 const miOpcion = this.getAttribute("alt");
                 const elegido = e.target;
                 const computerMove = botOpcion.getAttribute("alt");
-                //muestra las opciones elegidas
+                //muestra las opciones elegidas por el jugador y el bot
                 elegido.id = "elegido";
                 botOpcion.id = "botElegido";
                 //si se hace click en una opcion remueve el elemento contador
                 //si contador llega a 0 reinicia el juego 
                 if (reloj.textContent == "0") _router.goto("/rules");
                 reloj.remove();
-                // consulta con el estado quien gano y muestra el componente correspondiente
-                if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") setTimeout(function() {
-                    ganaste.id = "ganaste";
-                }, 500);
-                else if (_state.state.whoWins(miOpcion, computerMove) == "empate") {
-                    empate.id = "h1";
-                    setTimeout(function() {
-                        _router.goto("/game");
-                    }, 1500);
-                } else setTimeout(function() {
-                    perdiste.id = "perdiste";
-                }, 1000);
                 //le paso los valores de la jugada al currentGame
                 const lastState = _state.state.getState();
                 _state.state.setState({
@@ -610,14 +597,25 @@ class GamePage extends HTMLElement {
                     currentGame: {
                         myPlay: miOpcion,
                         computerPlay: computerMove
-                    },
-                    history: [
-                        {
-                            jugador: miOpcion,
-                            bot: computerMove
-                        }
-                    ]
+                    }
                 });
+                // consulta con el estado quien gano y muestra el componente correspondiente
+                if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") {
+                    lastState.score.jugador++;
+                    setTimeout(function() {
+                        ganaste.id = "ganaste";
+                    }, 500);
+                } else if (_state.state.whoWins(miOpcion, computerMove) == "empate") {
+                    empataste.id = "empate";
+                    setTimeout(function() {
+                        _router.goto("/game");
+                    }, 1500);
+                } else {
+                    lastState.score.bot++;
+                    setTimeout(function() {
+                        perdiste.id = "perdiste";
+                    }, 1000);
+                }
                 //pone display none a los no elegidos
                 manos.forEach((item2)=>{
                     if (item2.id != "elegido") item2.id = "noElegido";
@@ -707,7 +705,7 @@ const state = {
     //    }); 
     },
     whoWins (myPlay, computerPlay) {
-        const currentState = this.getState().score;
+        //const currentState = this.getState().score;
         const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
         const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
         const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
@@ -724,14 +722,11 @@ const state = {
             empateConPiedra,
             empateContijera
         ];
-        if (gane.includes(true)) {
-            currentState.jugador++;
-            return "ganaste";
-        } else if (empate.includes(true)) return "empate";
-        else {
-            currentState.bot++;
-            return "perdiste";
-        }
+        if (gane.includes(true)) //currentState.jugador ++
+        return "ganaste";
+        else if (empate.includes(true)) return "empate";
+        else //currentState.bot++
+        return "perdiste";
     },
     setMove (move) {
         const currentState = this.getState();
@@ -977,6 +972,50 @@ customElements.define("perdiste-el", Estrellas);
 },{"url:../../img/perdiste.png":"32d2U"}],"32d2U":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "perdiste.914ceaae.png";
 
-},{"./helpers/bundle-url":"8YnfL"}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
+},{"./helpers/bundle-url":"8YnfL"}],"lFAOC":[function(require,module,exports) {
+const empate = require("url:../../img/empataste.png");
+class Estrellae extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.render();
+    }
+    render() {
+        this.shadow.innerHTML = `\n        <h1 class="titulo">Empate</h1>\n        <img class= "estrella"  src="${empate}" alt="estrella">\n\n        `;
+        const style = document.createElement("style");
+        style.innerHTML = `\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            top:95px;\n            left:120px;\n            letter-spacing: 0.05em;\n            \n            \n        }\n        .estrella{\n            display:block;\n            margin:30px auto;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+}
+customElements.define("empataste-el", Estrellae);
+
+},{"url:../../img/empataste.png":"hjz6O"}],"hjz6O":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "empataste.8e51d2b6.png";
+
+},{"./helpers/bundle-url":"8YnfL"}],"ek0QC":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class Empate extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        this.shadow.innerHTML = `\n       <div class="container">\n       <empataste-el></empataste-el>\n       <tablero-el></tablero-el>\n       `;
+    }
+}
+customElements.define("empate-el", Empate);
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
 
 //# sourceMappingURL=index.b31310b1.js.map

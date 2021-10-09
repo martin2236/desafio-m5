@@ -48,6 +48,7 @@ class Resultado extends HTMLElement{
         }
         
         `
+        
         this.shadow.appendChild(style);
     }
 }

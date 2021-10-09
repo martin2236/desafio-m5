@@ -21,9 +21,7 @@ class GamePage extends HTMLElement{
        
     this.render()
         
-    state.subscribe(()=>{
-        state.getState()
-    })
+    
         
     const style = document.createElement("style")
         style.innerHTML = `
@@ -36,13 +34,6 @@ class GamePage extends HTMLElement{
         .h1{
             display:none
         }
-        #h1{
-            display: inherit;
-            position:absolute;
-            color:red;
-            top:50%;
-            z-index:1000;
-        }
        .opcion{
           
            width:103px;
@@ -53,7 +44,8 @@ class GamePage extends HTMLElement{
        #elegido{
         margin-bottom:80px;
         position: absolute;
-        bottom:0;
+        left:35%;
+        bottom:-80px;
        }
        #noElegido{
            display:none;
@@ -61,11 +53,10 @@ class GamePage extends HTMLElement{
        #botElegido{
            display: inherit;
            transform: rotate(180deg);
-          
            position : absolute;
-           top:0;
-           left: 0;
-           right: 0;
+           top:-80px;
+           left: 35%;
+           
            margin-top:80px;
            height: 235px;
        }
@@ -82,6 +73,12 @@ class GamePage extends HTMLElement{
        #perdiste{
         display: inherit;
        }
+       .empate{
+           display:none;
+       }
+       #empate{
+           display:inherit;
+       }
         
         `
         this.shadow.appendChild(style)
@@ -95,12 +92,12 @@ class GamePage extends HTMLElement{
         <div class= "container">
         <contador-el class="reloj">4</contador-el>
         <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">
-        <h1 class="h1">Empate!!!</h1>
         <img class= "opcion"  src="${papel} " alt="papel">
         <img class = "opcion" src="${piedra} " alt="piedra">
         <img class="opcion" src="${tijera} " alt="tijera">
         <ganador-el class="ganaste"></ganador-el>
         <perdedor-el class="perdiste"></perdedor-el>
+        <empate-el class="empate"></empate-el>
      
         </div>
        
@@ -110,7 +107,7 @@ class GamePage extends HTMLElement{
       const reloj = this.shadow.querySelector(".reloj")
       const ganaste = this.shadow.querySelector(".ganaste")
       const perdiste = this.shadow.querySelector(".perdiste")
-      const empate = this.shadow.querySelector("h1")
+      const empataste = this.shadow.querySelector(".empate")
       //itera los elementos img
     manos.forEach((item)=>{
         item.addEventListener("click",function(e){
@@ -119,7 +116,7 @@ class GamePage extends HTMLElement{
             const elegido = e.target as any
             const computerMove =  botOpcion.getAttribute("alt")
             
-           //muestra las opciones elegidas
+           //muestra las opciones elegidas por el jugador y el bot
             elegido.id = "elegido"
             botOpcion.id = "botElegido"
 
@@ -131,16 +128,6 @@ class GamePage extends HTMLElement{
             reloj.remove()
           
         
-           // consulta con el estado quien gano y muestra el componente correspondiente
-            if (state.whoWins(miOpcion,computerMove)=="ganaste"){
-                    setTimeout(function(){ ganaste.id = "ganaste" }, 500);
-           }else if(state.whoWins(miOpcion,computerMove)=="empate"){
-                    empate.id = "h1"
-                    setTimeout(function(){goto("/game")  }, 1500);
-           } else {
-            setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
-           }
-
             //le paso los valores de la jugada al currentGame
             const lastState = state.getState()
             state.setState({...lastState,
@@ -148,12 +135,23 @@ class GamePage extends HTMLElement{
                     myPlay:miOpcion,
                     computerPlay:computerMove 
                 },
-                history:[{
-                    jugador: miOpcion,
-                    bot: computerMove
-                }]
+                
                 })
-        
+
+                
+           // consulta con el estado quien gano y muestra el componente correspondiente
+            if (state.whoWins(miOpcion,computerMove)=="ganaste"){
+                    lastState.score.jugador++
+                    setTimeout(function(){ ganaste.id = "ganaste" }, 500);
+           }else if(state.whoWins(miOpcion,computerMove)=="empate"){
+                    empataste.id = "empate"
+                    setTimeout(function(){goto("/game")  }, 1500);
+           } else {
+            lastState.score.bot++
+            setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
+           }
+
+               
             //pone display none a los no elegidos
            manos.forEach((item2)=>{
              if (item2.id != "elegido"){item2.id = "noElegido"}

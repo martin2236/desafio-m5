@@ -4,9 +4,11 @@ import { router } from "./router"
 import "./components/boton/index"
 import "./components/estrellas/ganador"
 import "./components/estrellas/perdedor"
+import "./components/estrellas/empate"
 import "./components/resultados/tablero"
 import "./components/ganador/index"
 import "./components/perdedor/index"
+import "./components/empate/index"
 
 
 

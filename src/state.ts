@@ -38,7 +38,7 @@ const state = {
        
         },
         whoWins(myPlay:Jugada,computerPlay:Jugada){
-            const currentState = this.getState().score;
+            //const currentState = this.getState().score;
             const ganeConTijeras:boolean = myPlay == "tijera" && computerPlay == "papel"
             const ganeConPiedra:boolean = myPlay == "piedra" && computerPlay == "tijera" 
             const ganeConPapel:boolean = myPlay == "papel" && computerPlay == "piedra"
@@ -48,12 +48,12 @@ const state = {
             const gane = [ganeConPapel, ganeConPiedra, ganeConTijeras]
             const empate = [empateConPapel, empateConPiedra, empateContijera]
             if (gane.includes(true)){
-                currentState.jugador ++
+                //currentState.jugador ++
                 return "ganaste"
             }else if(empate.includes(true)){
                 return "empate"
             } else {
-                currentState.bot++
+                //currentState.bot++
                 return "perdiste"
             }
            
