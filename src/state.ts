@@ -28,6 +28,7 @@ const state = {
              for (const cb of this.listener){
                  cb(newState);
              }
+             localStorage.setItem("saved-state",JSON.stringify(newState))
         },
         history(){
         return this.data.history
