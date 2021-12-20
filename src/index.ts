@@ -6,13 +6,12 @@ import "./components/estrellas/ganador"
 import "./components/estrellas/perdedor"
 import "./components/estrellas/empate"
 import "./components/resultados/tablero"
-import "./components/ganador/index"
-import "./components/perdedor/index"
-import "./components/empate/index"
+
 
 
 
 
 window.addEventListener("load",()=>{
+state.init();
 router(location.pathname)
 })

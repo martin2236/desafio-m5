@@ -34,6 +34,7 @@ class RulesPage extends HTMLElement{
         `
         this.shadow.appendChild(style)
     }
+
     render(){
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
@@ -49,10 +50,10 @@ class RulesPage extends HTMLElement{
        <img src="${tijera} " alt="tijera">
        </div>
       `
-      const boton = this.shadow.querySelector(".boton")
-      boton.addEventListener("click",function(e){
-         const ruta = this.getAttribute("href")
-         goto(ruta)
+    const boton = this.shadow.querySelector(".boton")
+    boton.addEventListener("click",function(e){
+        const ruta = this.getAttribute("href")
+        goto(ruta)
       })
     }
 }

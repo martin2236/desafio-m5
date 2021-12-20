@@ -456,20 +456,19 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"4aleK":[function(require,module,exports) {
 var _contador = require("./components/contador/contador");
+var _state = require("./state");
 var _router = require("./router");
 var _index = require("./components/boton/index");
 var _ganador = require("./components/estrellas/ganador");
 var _perdedor = require("./components/estrellas/perdedor");
 var _empate = require("./components/estrellas/empate");
 var _tablero = require("./components/resultados/tablero");
-var _index1 = require("./components/ganador/index");
-var _index2 = require("./components/perdedor/index");
-var _index3 = require("./components/empate/index");
 window.addEventListener("load", ()=>{
+    _state.state.init();
     _router.router(location.pathname);
 });
 
-},{"./router":"b2iia","./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/ganador/index":"5B7I0","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/perdedor/index":"6JpHo","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./components/empate/index":"ek0QC"}],"b2iia":[function(require,module,exports) {
+},{"./router":"b2iia","./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./state":"28XHA"}],"b2iia":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "router", ()=>router
@@ -479,6 +478,9 @@ parcelHelpers.export(exports, "goto", ()=>goto
 var _game = require("./pages/game/game");
 var _welcome = require("./pages/welcome/welcome");
 var _rules = require("./pages/rules/rules");
+var _winner = require("./pages/results/winner");
+var _loser = require("./pages/results/loser");
+var _draw = require("./pages/results/draw");
 function router(ruta) {
     const route = [
         {
@@ -492,6 +494,18 @@ function router(ruta) {
         {
             route: /\/game/,
             page: `<game-el></game-el>`
+        },
+        {
+            route: /\/winner/,
+            page: `<winner-el></winner-el>`
+        },
+        {
+            route: /\/loser/,
+            page: `<loser-el></loser-el>`
+        },
+        {
+            route: /\/draw/,
+            page: `<draw-el></draw-el>`
         }, 
     ];
     for (const r of route)if (r.route.test(ruta)) {
@@ -507,39 +521,7 @@ function goto(path) {
     router(path);
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./pages/game/game":"gTQkq","./pages/welcome/welcome":"7XTfo","./pages/rules/rules":"lxZWu"}],"JacNc":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule') return;
-        // Skip duplicate re-exports when they have the same value.
-        if (key in dest && dest[key] === source[key]) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"gTQkq":[function(require,module,exports) {
+},{"./pages/game/game":"gTQkq","./pages/welcome/welcome":"7XTfo","./pages/rules/rules":"lxZWu","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./pages/results/winner":"3x8VL","./pages/results/draw":"jlL4W","./pages/results/loser":"gXfgD"}],"gTQkq":[function(require,module,exports) {
 var _router = require("../../router");
 var _state = require("../../state");
 const papel = require("url:../../img/papel.png");
@@ -564,13 +546,13 @@ class GamePage extends HTMLElement {
     connectedCallback() {
         this.render();
         const style = document.createElement("style");
-        style.innerHTML = `\n        .container{\n            height: 100vh;\n        }\n        .bot{\n            display:none\n        }\n        .h1{\n            display:none\n        }\n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        left:35%;\n        bottom:-80px;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n           position : absolute;\n           top:-80px;\n           left: 35%;\n           \n           margin-top:80px;\n           height: 235px;\n       }\n      \n       .ganaste{\n           display:none;\n       }\n       .perdiste{\n           display:none;\n       }\n       #ganaste{\n        display: inherit;\n       }\n       #perdiste{\n        display: inherit;\n       }\n       .empate{\n           display:none;\n       }\n       #empate{\n           display:inherit;\n       }\n        \n        `;
+        style.innerHTML = `\n        .container{\n            height: 100vh;\n            margin-top:-100px;\n        }\n        .bot{\n            display:none\n        }\n        .h1{\n            display:none\n        }\n       .opcion{\n          \n           width:103px;\n           height: 235px;\n           margin: 70px 5px 0 5px;\n          \n       }\n       #elegido{\n        margin-bottom:80px;\n        position: absolute;\n        left:35%;\n        bottom:-80px;\n       }\n       #noElegido{\n           display:none;\n       }\n       #botElegido{\n           display: inherit;\n           transform: rotate(180deg);\n           position : absolute;\n           top:-80px;\n           left: 35%;\n           \n           margin-top:80px;\n           height: 235px;\n       }\n      \n       .ganaste{\n           display:none;\n       }\n       .perdiste{\n           display:none;\n       }\n       #ganaste{\n        display: inherit;\n       }\n       #perdiste{\n        display: inherit;\n       }\n       .empate{\n           display:none;\n       }\n       #empate{\n           display:inherit;\n       }\n       .hand-cont{\n           width:100%;\n           display:flex;\n           justify-content:space-around;\n           margin-top:100px;\n       }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
-        this.shadow.innerHTML = `\n        <div class= "container">\n        <contador-el class="reloj">4</contador-el>\n        <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n        <img class= "opcion"  src="${papel} " alt="papel">\n        <img class = "opcion" src="${piedra} " alt="piedra">\n        <img class="opcion" src="${tijera} " alt="tijera">\n        <ganador-el class="ganaste"></ganador-el>\n        <perdedor-el class="perdiste"></perdedor-el>\n        <empate-el class="empate"></empate-el>\n     \n        </div>\n       \n      `;
+        this.shadow.innerHTML = `\n        <div class= "container">\n            <contador-el class="reloj">4</contador-el>\n            <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n            <div class="hand-cont">\n                <img class= "opcion"  src="${papel} " alt="papel">\n                <img class = "opcion" src="${piedra} " alt="piedra">\n                <img class="opcion" src="${tijera} " alt="tijera">\n            </div>\n            \n        </div>\n       \n      `;
         var manos = this.shadow.querySelectorAll(".opcion");
         const botOpcion = this.shadow.querySelector(".bot");
         const reloj = this.shadow.querySelector(".reloj");
@@ -588,10 +570,24 @@ class GamePage extends HTMLElement {
                 botOpcion.id = "botElegido";
                 //si se hace click en una opcion remueve el elemento contador
                 //si contador llega a 0 reinicia el juego 
-                if (reloj.textContent == "0") _router.goto("/rules");
                 reloj.remove();
                 //le paso los valores de la jugada al currentGame
                 const lastState = _state.state.getState();
+                // consulta con el estado quien gano y muestra el componente correspondiente
+                if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") {
+                    lastState.score.jugador++;
+                    setTimeout(function() {
+                        _router.goto("/winner");
+                    }, 1500);
+                } else if (_state.state.whoWins(miOpcion, computerMove) == "empate") setTimeout(function() {
+                    _router.goto("/draw");
+                }, 1500);
+                else {
+                    lastState.score.bot++;
+                    setTimeout(function() {
+                        _router.goto("/loser");
+                    }, 1500);
+                }
                 _state.state.setState({
                     ...lastState,
                     currentGame: {
@@ -599,30 +595,12 @@ class GamePage extends HTMLElement {
                         computerPlay: computerMove
                     }
                 });
-                // consulta con el estado quien gano y muestra el componente correspondiente
-                if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") {
-                    lastState.score.jugador++;
-                    setTimeout(function() {
-                        ganaste.id = "ganaste";
-                    }, 500);
-                } else if (_state.state.whoWins(miOpcion, computerMove) == "empate") {
-                    empataste.id = "empate";
-                    setTimeout(function() {
-                        _router.goto("/game");
-                    }, 1500);
-                } else {
-                    lastState.score.bot++;
-                    setTimeout(function() {
-                        perdiste.id = "perdiste";
-                    }, 1000);
-                }
                 //le paso las jugadas a state.pushtoHistory
                 const juego = {
                     myPlay: miOpcion,
                     computerPlay: computerMove
                 };
                 _state.state.pushToHistory(juego);
-                console.log(_state.state.history());
                 //pone display none a los no elegidos
                 manos.forEach((item2)=>{
                     if (item2.id != "elegido") item2.id = "noElegido";
@@ -633,7 +611,7 @@ class GamePage extends HTMLElement {
 }
 customElements.define("game-el", GamePage);
 
-},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../state":"28XHA","../../router":"b2iia"}],"fTpqS":[function(require,module,exports) {
+},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia","../../state":"28XHA"}],"fTpqS":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "papel.bf73f8ac.png";
 
 },{"./helpers/bundle-url":"8YnfL"}],"8YnfL":[function(require,module,exports) {
@@ -707,6 +685,11 @@ const state = {
         this.data = newState;
         for (const cb of this.listener)cb(newState);
         localStorage.setItem("saved-state", JSON.stringify(newState));
+        console.log(newState.score);
+    },
+    init () {
+        const localData = localStorage.getItem("saved-state");
+        this.setState(JSON.parse(localData));
     },
     history () {
         return this.data.history;
@@ -751,7 +734,39 @@ const state = {
     }
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"7XTfo":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule') return;
+        // Skip duplicate re-exports when they have the same value.
+        if (key in dest && dest[key] === source[key]) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"7XTfo":[function(require,module,exports) {
 var _router = require("../../router");
 const papel = require("url:../../img/papel.png");
 const piedra = require("url:../../img/piedra.png");
@@ -813,6 +828,89 @@ class RulesPage extends HTMLElement {
 }
 customElements.define("rules-el", RulesPage);
 
+},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"3x8VL":[function(require,module,exports) {
+var _router = require("../../router");
+const papel = require("url:../../img/papel.png");
+const piedra = require("url:../../img/piedra.png");
+const tijera = require("url:../../img/tijera.png");
+class winnerPage extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        this.shadow.innerHTML = `\n        <div class="container">\n        <ganaste-el></ganaste-el>\n        <tablero-el></tablero-el>\n        <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>\n        </div>\n        `;
+        const boton = this.shadow.querySelector(".boton");
+        boton.addEventListener("click", function(e) {
+            _router.goto("/rules");
+        });
+    }
+}
+customElements.define("winner-el", winnerPage);
+
+},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"jlL4W":[function(require,module,exports) {
+var _router = require("../../router");
+const papel = require("url:../../img/papel.png");
+const piedra = require("url:../../img/piedra.png");
+const tijera = require("url:../../img/tijera.png");
+class drawPage extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        this.shadow.innerHTML = `\n       <div class="container">\n       <empataste-el></empataste-el>\n       <tablero-el></tablero-el>\n       `;
+        setTimeout(function() {
+            _router.goto("/rules");
+        }, 1500);
+    }
+}
+customElements.define("draw-el", drawPage);
+
+},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"gXfgD":[function(require,module,exports) {
+var _router = require("../../router");
+const papel = require("url:../../img/papel.png");
+const piedra = require("url:../../img/piedra.png");
+const tijera = require("url:../../img/tijera.png");
+class loserPage extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: #894949E5 90%;\n\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        this.shadow.innerHTML = `\n       <div class="container">\n       <perdiste-el></perdiste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>\n       </div>\n    `;
+        const boton = this.shadow.querySelector(".boton");
+        boton.addEventListener("click", function(e) {
+            _router.goto("/rules");
+        });
+    }
+}
+customElements.define("loser-el", loserPage);
+
 },{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"2KzZN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -867,33 +965,7 @@ class Boton extends HTMLElement {
 }
 customElements.define("btn-el", Boton);
 
-},{}],"5B7I0":[function(require,module,exports) {
-var _router = require("../../router");
-class Ganador extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-    }
-    connectedCallback() {
-        this.render();
-        const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-    render() {
-        this.shadow.innerHTML = `\n       <div class="container">\n       <ganaste-el></ganaste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>\n       </div>\n\n      `;
-        const boton = this.shadow.querySelector(".boton");
-        boton.addEventListener("click", function(e) {
-            const ruta = this.getAttribute("href");
-            _router.goto(ruta);
-        });
-    }
-}
-customElements.define("ganador-el", Ganador);
-
-},{"../../router":"b2iia"}],"4VD01":[function(require,module,exports) {
+},{}],"4VD01":[function(require,module,exports) {
 const ganador = require("url:../../img/ganaste.png");
 class Estrella extends HTMLElement {
     constructor(){
@@ -904,9 +976,9 @@ class Estrella extends HTMLElement {
         this.render();
     }
     render() {
-        this.shadow.innerHTML = `\n        <h1 class="titulo">Ganaste</h1>\n        <img class= "estrella"  src="${ganador}" alt="estrella">\n\n        `;
+        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Ganaste</h1>\n            <img class= "estrella"  src="${ganador}" alt="estrella">\n        </div>\n        \n\n        `;
         const style = document.createElement("style");
-        style.innerHTML = `\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            top:95px;\n            left:120px;\n            letter-spacing: 0.05em;\n            \n            \n        }\n        .estrella{\n            display:block;\n            margin:30px auto;\n        }\n        \n        `;
+        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }   \n    `;
         this.shadow.appendChild(style);
     }
 }
@@ -938,33 +1010,7 @@ customElements.define("tablero-el", Resultado);
 },{"url:../../img/rectangle.png":"1X6Cx","../../state":"28XHA"}],"1X6Cx":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "rectangle.a4eaf4ed.png";
 
-},{"./helpers/bundle-url":"8YnfL"}],"6JpHo":[function(require,module,exports) {
-var _router = require("../../router");
-class Perdedor extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-    }
-    connectedCallback() {
-        this.render();
-        const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: #894949E5 90%;\n\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-    render() {
-        this.shadow.innerHTML = `\n       <div class="container">\n       <perdiste-el></perdiste-el>\n       <tablero-el></tablero-el>\n       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>\n       </div>\n\n      `;
-        const boton = this.shadow.querySelector(".boton");
-        boton.addEventListener("click", function(e) {
-            const ruta = this.getAttribute("href");
-            _router.goto(ruta);
-        });
-    }
-}
-customElements.define("perdedor-el", Perdedor);
-
-},{"../../router":"b2iia"}],"9BAgK":[function(require,module,exports) {
+},{"./helpers/bundle-url":"8YnfL"}],"9BAgK":[function(require,module,exports) {
 const perdedor = require("url:../../img/perdiste.png");
 class Estrellas extends HTMLElement {
     constructor(){
@@ -975,9 +1021,9 @@ class Estrellas extends HTMLElement {
         this.render();
     }
     render() {
-        this.shadow.innerHTML = `\n        <h1 class="titulo">Perdiste</h1>\n        <img class= "estrella"  src="${perdedor}" alt="estrella">\n\n        `;
+        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Perdiste</h1>\n            <img class= "estrella"  src="${perdedor}" alt="estrella">\n        </div>\n    `;
         const style = document.createElement("style");
-        style.innerHTML = `\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            top:95px;\n            left:110px;\n            letter-spacing: 0.05em;\n            \n            \n        }\n        .estrella{\n            display:block;\n            margin:30px auto;\n        }\n        \n        `;
+        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }   \n        `;
         this.shadow.appendChild(style);
     }
 }
@@ -997,9 +1043,9 @@ class Estrellae extends HTMLElement {
         this.render();
     }
     render() {
-        this.shadow.innerHTML = `\n        <h1 class="titulo">Empate</h1>\n        <img class= "estrella"  src="${empate}" alt="estrella">\n\n        `;
+        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Empate</h1>\n            <img class= "estrella"  src="${empate}" alt="estrella">\n        </div>\n    `;
         const style = document.createElement("style");
-        style.innerHTML = `\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            top:95px;\n            left:120px;\n            letter-spacing: 0.05em;\n            \n            \n        }\n        .estrella{\n            display:block;\n            margin:30px auto;\n        }\n        \n        `;
+        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }  \n        \n        `;
         this.shadow.appendChild(style);
     }
 }
@@ -1008,28 +1054,6 @@ customElements.define("empataste-el", Estrellae);
 },{"url:../../img/empataste.png":"hjz6O"}],"hjz6O":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "empataste.8e51d2b6.png";
 
-},{"./helpers/bundle-url":"8YnfL"}],"ek0QC":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-class Empate extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-    }
-    connectedCallback() {
-        this.render();
-        const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-    render() {
-        this.shadow.innerHTML = `\n       <div class="container">\n       <empataste-el></empataste-el>\n       <tablero-el></tablero-el>\n       `;
-    }
-}
-customElements.define("empate-el", Empate);
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
+},{"./helpers/bundle-url":"8YnfL"}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
 
 //# sourceMappingURL=index.b31310b1.js.map

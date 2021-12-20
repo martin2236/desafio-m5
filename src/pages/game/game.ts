@@ -9,6 +9,7 @@ class GamePage extends HTMLElement{
     opcionesDelBot:string[]= [papel, piedra, tijera]
     jugadaDelBot: string
     alt:string
+
     constructor(){
         super()
         this.shadow = this.attachShadow({mode:"open"})
@@ -18,15 +19,12 @@ class GamePage extends HTMLElement{
         this.alt=direccion[3].split(".")[0]
     }
     connectedCallback(){
-       
     this.render()
-        
-    
-        
     const style = document.createElement("style")
         style.innerHTML = `
         .container{
             height: 100vh;
+            margin-top:-100px;
         }
         .bot{
             display:none
@@ -79,6 +77,12 @@ class GamePage extends HTMLElement{
        #empate{
            display:inherit;
        }
+       .hand-cont{
+           width:100%;
+           display:flex;
+           justify-content:space-around;
+           margin-top:100px;
+       }
         
         `
         this.shadow.appendChild(style)
@@ -90,87 +94,82 @@ class GamePage extends HTMLElement{
         //o por atributos
         this.shadow.innerHTML=`
         <div class= "container">
-        <contador-el class="reloj">4</contador-el>
-        <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">
-        <img class= "opcion"  src="${papel} " alt="papel">
-        <img class = "opcion" src="${piedra} " alt="piedra">
-        <img class="opcion" src="${tijera} " alt="tijera">
-        <ganador-el class="ganaste"></ganador-el>
-        <perdedor-el class="perdiste"></perdedor-el>
-        <empate-el class="empate"></empate-el>
-     
+            <contador-el class="reloj">4</contador-el>
+            <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">
+            <div class="hand-cont">
+                <img class= "opcion"  src="${papel} " alt="papel">
+                <img class = "opcion" src="${piedra} " alt="piedra">
+                <img class="opcion" src="${tijera} " alt="tijera">
+            </div>
+            
         </div>
        
       `
-     var manos = this.shadow.querySelectorAll(".opcion")
-      const botOpcion = this.shadow.querySelector(".bot") as any
-      const reloj = this.shadow.querySelector(".reloj")
-      const ganaste = this.shadow.querySelector(".ganaste")
-      const perdiste = this.shadow.querySelector(".perdiste")
-      const empataste = this.shadow.querySelector(".empate")
+    var manos = this.shadow.querySelectorAll(".opcion")
+    const botOpcion = this.shadow.querySelector(".bot") as any
+    const reloj = this.shadow.querySelector(".reloj")
+    const ganaste = this.shadow.querySelector(".ganaste")
+    const perdiste = this.shadow.querySelector(".perdiste")
+    const empataste = this.shadow.querySelector(".empate")
       //itera los elementos img
-    manos.forEach((item)=>{
-        item.addEventListener("click",function(e){
+        manos.forEach((item)=>{
+            item.addEventListener("click",function(e){
 
-            const miOpcion = this.getAttribute("alt") 
-            const elegido = e.target as any
-            const computerMove =  botOpcion.getAttribute("alt")
+                const miOpcion = this.getAttribute("alt") 
+                const elegido = e.target as any
+                const computerMove =  botOpcion.getAttribute("alt")
             
-           //muestra las opciones elegidas por el jugador y el bot
-            elegido.id = "elegido"
-            botOpcion.id = "botElegido"
+                //muestra las opciones elegidas por el jugador y el bot
+                elegido.id = "elegido"
+                botOpcion.id = "botElegido"
 
-           //si se hace click en una opcion remueve el elemento contador
-           //si contador llega a 0 reinicia el juego 
-            if(reloj.textContent == "0"){
-                goto("/rules")
-            }
-            reloj.remove()
+                //si se hace click en una opcion remueve el elemento contador
+                //si contador llega a 0 reinicia el juego 
+              
+                reloj.remove()
           
         
-            //le paso los valores de la jugada al currentGame
-            const lastState = state.getState()
-            state.setState({...lastState,
+                //le paso los valores de la jugada al currentGame
+                const lastState = state.getState()
+          
+                
+                // consulta con el estado quien gano y muestra el componente correspondiente
+                if (state.whoWins(miOpcion,computerMove)=="ganaste"){
+                    lastState.score.jugador++
+                    setTimeout(function(){goto("/winner")  }, 1500);
+                    
+                }else if(state.whoWins(miOpcion,computerMove)=="empate"){
+                   
+                    setTimeout(function(){goto("/draw")  }, 1500);
+                } else {
+                lastState.score.bot++
+                setTimeout(function(){goto("/loser") }, 1500);
+                
+                }
+
+                state.setState({...lastState,
                 currentGame:{
                     myPlay:miOpcion,
                     computerPlay:computerMove 
-                },
-            })
+                    },
+                })
 
-                
-           // consulta con el estado quien gano y muestra el componente correspondiente
-            if (state.whoWins(miOpcion,computerMove)=="ganaste"){
-                    lastState.score.jugador++
-                    setTimeout(function(){ ganaste.id = "ganaste" }, 500);
-           }else if(state.whoWins(miOpcion,computerMove)=="empate"){
-                    empataste.id = "empate"
-                    setTimeout(function(){goto("/game")  }, 1500);
-           } else {
-            lastState.score.bot++
-            setTimeout(function(){ perdiste.id = "perdiste" }, 1000);
-           }
+
+                //le paso las jugadas a state.pushtoHistory
+                 const juego = {
+                    myPlay:miOpcion,
+                    computerPlay:computerMove
+                }
+                state.pushToHistory(juego)
 
            
-
-           //le paso las jugadas a state.pushtoHistory
-            const juego = {
-                myPlay:miOpcion,
-                computerPlay:computerMove
-            }
-           state.pushToHistory(juego)
-
-           console.log(state.history())
                
-            //pone display none a los no elegidos
-           manos.forEach((item2)=>{
-             if (item2.id != "elegido"){item2.id = "noElegido"}
-           })
-
+                //pone display none a los no elegidos
+                manos.forEach((item2)=>{
+                if (item2.id != "elegido"){item2.id = "noElegido"}
+                })
+            })
         })
-     
-    })
-    
-         
     }
 }
 customElements.define("game-el",GamePage)

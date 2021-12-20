@@ -20,6 +20,7 @@ const state = {
         }]
         },
         listener:[],
+       
         getState(){
            return this.data
         },
@@ -29,7 +30,12 @@ const state = {
                  cb(newState);
              }
              localStorage.setItem("saved-state",JSON.stringify(newState))
+             console.log(newState.score)
         },
+        init(){
+            const localData =  localStorage.getItem("saved-state");
+            this.setState(JSON.parse(localData))
+          },
         history(){
         return this.data.history
         },

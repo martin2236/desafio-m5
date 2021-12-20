@@ -8,30 +8,34 @@ class Estrella extends HTMLElement{
     }
     render(){
         this.shadow.innerHTML=`
-        <h1 class="titulo">Ganaste</h1>
-        <img class= "estrella"  src="${ganador}" alt="estrella">
+        <div class="contenedor">
+            <h1 class="titulo">Ganaste</h1>
+            <img class= "estrella"  src="${ganador}" alt="estrella">
+        </div>
+        
 
         `
 
         const style = document.createElement("style")
         style.innerHTML = `
+        .contenedor{
+            width:200px;
+            height:200px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            margin:50px auto ;
+        }
         .titulo{
             font-family: 'Odibee Sans', cursive;
             font-size:55px;
             color:#fff;
             position: absolute;
-            top:95px;
-            left:120px;
             letter-spacing: 0.05em;
-            
-            
-        }
-        .estrella{
-            display:block;
-            margin:30px auto;
-        }
-        
-        `
+            margin: auto auto;
+        }   
+    `
         this.shadow.appendChild(style);
     }
 }
