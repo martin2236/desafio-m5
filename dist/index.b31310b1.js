@@ -457,22 +457,310 @@ function hmrAcceptRun(bundle, id) {
 },{}],"4aleK":[function(require,module,exports) {
 var _contador = require("./components/contador/contador");
 var _state = require("./state");
-var _router = require("./router");
 var _index = require("./components/boton/index");
 var _ganador = require("./components/estrellas/ganador");
 var _perdedor = require("./components/estrellas/perdedor");
 var _empate = require("./components/estrellas/empate");
 var _tablero = require("./components/resultados/tablero");
+var _router = require("./router");
 window.addEventListener("load", ()=>{
     _state.state.init();
-    _router.router(location.pathname);
+    var path = location.pathname;
+    console.log(path);
+    _router.goto(path);
 });
 
-},{"./router":"b2iia","./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./state":"28XHA"}],"b2iia":[function(require,module,exports) {
+},{"./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./state":"28XHA","./router":"b2iia"}],"2KzZN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "router", ()=>router
+class Contador extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.contador = 3;
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .contador{\n            display: flex;\n            justify-content:center;\n            align-items:center;\n            height: 243px;\n            width: 243px;\n            font-size: 72px;\n            font-weight:700;\n            border: 23px solid #000;\n            border-radius: 150px;\n            margin:125px auto 0 auto;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        //aca va el custom el de las jugadas se pueden definir por custom-el
+        //o por atributos
+        this.shadow.innerHTML = `\n       <div class = "contador"></div>\n\n      `;
+        var tiempo = this.shadow.querySelector(".contador");
+        var numero = 4;
+        var algo = setInterval(cuentaRegresiva, 1000);
+        function cuentaRegresiva(number) {
+            numero--;
+            if (numero == 0) clearInterval(algo);
+            tiempo.innerHTML = `${numero}`;
+        }
+    }
+}
+customElements.define("contador-el", Contador);
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule') return;
+        // Skip duplicate re-exports when they have the same value.
+        if (key in dest && dest[key] === source[key]) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"g4sMT":[function(require,module,exports) {
+class Boton extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+    }
+    connectedCallback() {
+        this.render();
+        const style = document.createElement("style");
+        style.innerHTML = `\n     \n        .boton{\n            display: block;\n            margin:0 auto 86px auto;\n            width:322px;\n            border: 10px solid #001997;\n            height:87px;\n            background: #006CFC;\n            border-radius:10px;\n            font-size:45px;\n            line-height:50px;\n            color: #D8FCFC;\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+    render() {
+        const texto = this.textContent;
+        this.shadow.innerHTML = `\n        <button class="boton">${texto}</button>\n\n      `;
+    }
+}
+customElements.define("btn-el", Boton);
+
+},{}],"4VD01":[function(require,module,exports) {
+const ganador = require("url:../../img/ganaste.png");
+class Estrella extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.render();
+    }
+    render() {
+        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Ganaste</h1>\n            <img class= "estrella"  src="${ganador}" alt="estrella">\n        </div>\n        \n\n        `;
+        const style = document.createElement("style");
+        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }   \n    `;
+        this.shadow.appendChild(style);
+    }
+}
+customElements.define("ganaste-el", Estrella);
+
+},{"url:../../img/ganaste.png":"jMfYt"}],"jMfYt":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "ganaste.f9f1f8cd.png";
+
+},{"./helpers/bundle-url":"8YnfL"}],"8YnfL":[function(require,module,exports) {
+"use strict";
+var bundleURL = {
+};
+function getBundleURLCached(id) {
+    var value = bundleURL[id];
+    if (!value) {
+        value = getBundleURL();
+        bundleURL[id] = value;
+    }
+    return value;
+}
+function getBundleURL() {
+    try {
+        throw new Error();
+    } catch (err) {
+        var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+        if (matches) // The first two stack frames will be this function and getBundleURLCached.
+        // Use the 3rd one, which will be a runtime in the original bundle.
+        return getBaseURL(matches[2]);
+    }
+    return '/';
+}
+function getBaseURL(url) {
+    return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
+} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+function getOrigin(url) {
+    var matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
+    if (!matches) throw new Error('Origin not found');
+    return matches[0];
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+
+},{}],"5vuP3":[function(require,module,exports) {
+var _state = require("../../state");
+const tablero = require("url:../../img/rectangle.png");
+class Resultado extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.render();
+    }
+    render() {
+        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.getState().score.jugador}</p>\n            <p class = "p">Máquina:${_state.state.getState().score.bot}</p>\n        </div>\n       \n\n        `;
+        const style = document.createElement("style");
+        style.innerHTML = `\n      \n        .tablero{\n            display:block;\n            margin:11px auto;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 55px;\n            margin-bottom:0;\n        }\n        .p{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 45px;\n            margin-bottom:0;\n            margin-top:0;\n            text-align:end;\n        }\n        .contenedor{\n            position:absolute;\n            top:410px;\n            left:50%; \n            transform:translate(-50%, -50%);\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+}
+customElements.define("tablero-el", Resultado);
+
+},{"url:../../img/rectangle.png":"1X6Cx","../../state":"28XHA"}],"1X6Cx":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "rectangle.a4eaf4ed.png";
+
+},{"./helpers/bundle-url":"8YnfL"}],"28XHA":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state
 );
+const state = {
+    data: {
+        currentGame: {
+            myPlay: "",
+            computerPlay: ""
+        },
+        score: {
+            jugador: 0,
+            bot: 0
+        },
+        history: [
+            {
+                jugador: "",
+                bot: ""
+            }
+        ]
+    },
+    listener: [],
+    getState () {
+        return this.data;
+    },
+    setState (newState) {
+        this.data = newState;
+        for (const cb of this.listener)cb(newState);
+        localStorage.setItem("saved-state", JSON.stringify(newState));
+    },
+    init () {
+        const localData = localStorage.getItem("saved-state");
+        this.setState(JSON.parse(localData));
+    },
+    history () {
+        return this.data.history;
+    },
+    pushToHistory (play) {
+        const currentState = this.getState();
+        currentState.history.push({
+            jugador: play.myPlay,
+            bot: play.computerPlay
+        });
+    },
+    whoWins (myPlay, computerPlay) {
+        //const currentState = this.getState().score;
+        const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
+        const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
+        const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
+        const empateConPapel = myPlay == "papel" && computerPlay == "papel";
+        const empateConPiedra = myPlay == "piedra" && computerPlay == "piedra";
+        const empateContijera = myPlay == "tijera" && computerPlay == "tijera";
+        const gane = [
+            ganeConPapel,
+            ganeConPiedra,
+            ganeConTijeras
+        ];
+        const empate = [
+            empateConPapel,
+            empateConPiedra,
+            empateContijera
+        ];
+        if (gane.includes(true)) //currentState.jugador ++
+        return "ganaste";
+        else if (empate.includes(true)) return "empate";
+        else //currentState.bot++
+        return "perdiste";
+    },
+    setMove (move) {
+        const currentState = this.getState();
+        currentState.currentGame.myPlay;
+    },
+    subscribe (callback) {
+        return this.listener.push(callback);
+    }
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"9BAgK":[function(require,module,exports) {
+const perdedor = require("url:../../img/perdiste.png");
+class Estrellas extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.render();
+    }
+    render() {
+        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Perdiste</h1>\n            <img class= "estrella"  src="${perdedor}" alt="estrella">\n        </div>\n    `;
+        const style = document.createElement("style");
+        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }   \n        `;
+        this.shadow.appendChild(style);
+    }
+}
+customElements.define("perdiste-el", Estrellas);
+
+},{"url:../../img/perdiste.png":"32d2U"}],"32d2U":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "perdiste.914ceaae.png";
+
+},{"./helpers/bundle-url":"8YnfL"}],"lFAOC":[function(require,module,exports) {
+const empate = require("url:../../img/empataste.png");
+class Estrellae extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.render();
+    }
+    render() {
+        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Empate</h1>\n            <img class= "estrella"  src="${empate}" alt="estrella">\n        </div>\n    `;
+        const style = document.createElement("style");
+        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }  \n        \n        `;
+        this.shadow.appendChild(style);
+    }
+}
+customElements.define("empataste-el", Estrellae);
+
+},{"url:../../img/empataste.png":"hjz6O"}],"hjz6O":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "empataste.8e51d2b6.png";
+
+},{"./helpers/bundle-url":"8YnfL"}],"b2iia":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "goto", ()=>goto
 );
 var _game = require("./pages/game/game");
@@ -481,7 +769,19 @@ var _rules = require("./pages/rules/rules");
 var _winner = require("./pages/results/winner");
 var _loser = require("./pages/results/loser");
 var _draw = require("./pages/results/draw");
+const BASE_PATH = "/desafio-m5";
+function isGithubPages() {
+    return location.host.includes("github.io");
+}
+function goto(path) {
+    const completePath = isGithubPages() ? BASE_PATH + path : path;
+    history.pushState({
+    }, "", completePath);
+    router(completePath);
+}
 function router(ruta) {
+    //console.log("El router recibió una nueva ruta", ruta);
+    const newRoute = isGithubPages() ? ruta.replace(BASE_PATH, "") : ruta;
     const route = [
         {
             route: /\/welcome/,
@@ -515,13 +815,8 @@ function router(ruta) {
         contenedor.innerHTML = el;
     }
 }
-function goto(path) {
-    history.pushState({
-    }, "", path);
-    router(path);
-}
 
-},{"./pages/game/game":"gTQkq","./pages/welcome/welcome":"7XTfo","./pages/rules/rules":"lxZWu","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./pages/results/winner":"3x8VL","./pages/results/draw":"jlL4W","./pages/results/loser":"gXfgD"}],"gTQkq":[function(require,module,exports) {
+},{"./pages/game/game":"gTQkq","./pages/welcome/welcome":"7XTfo","./pages/rules/rules":"lxZWu","./pages/results/winner":"3x8VL","./pages/results/loser":"gXfgD","./pages/results/draw":"jlL4W","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"gTQkq":[function(require,module,exports) {
 var _router = require("../../router");
 var _state = require("../../state");
 const papel = require("url:../../img/papel.png");
@@ -614,159 +909,13 @@ customElements.define("game-el", GamePage);
 },{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia","../../state":"28XHA"}],"fTpqS":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "papel.bf73f8ac.png";
 
-},{"./helpers/bundle-url":"8YnfL"}],"8YnfL":[function(require,module,exports) {
-"use strict";
-var bundleURL = {
-};
-function getBundleURLCached(id) {
-    var value = bundleURL[id];
-    if (!value) {
-        value = getBundleURL();
-        bundleURL[id] = value;
-    }
-    return value;
-}
-function getBundleURL() {
-    try {
-        throw new Error();
-    } catch (err) {
-        var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
-        if (matches) // The first two stack frames will be this function and getBundleURLCached.
-        // Use the 3rd one, which will be a runtime in the original bundle.
-        return getBaseURL(matches[2]);
-    }
-    return '/';
-}
-function getBaseURL(url) {
-    return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
-} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
-function getOrigin(url) {
-    var matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
-    if (!matches) throw new Error('Origin not found');
-    return matches[0];
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-exports.getOrigin = getOrigin;
-
-},{}],"j1GzX":[function(require,module,exports) {
+},{"./helpers/bundle-url":"8YnfL"}],"j1GzX":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "piedra.82766faa.png";
 
 },{"./helpers/bundle-url":"8YnfL"}],"9JARl":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "tijera.dd5cc795.png";
 
-},{"./helpers/bundle-url":"8YnfL"}],"28XHA":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "state", ()=>state
-);
-const state = {
-    data: {
-        currentGame: {
-            myPlay: "",
-            computerPlay: ""
-        },
-        score: {
-            jugador: 0,
-            bot: 0
-        },
-        history: [
-            {
-                jugador: "",
-                bot: ""
-            }
-        ]
-    },
-    listener: [],
-    getState () {
-        return this.data;
-    },
-    setState (newState) {
-        this.data = newState;
-        for (const cb of this.listener)cb(newState);
-        localStorage.setItem("saved-state", JSON.stringify(newState));
-        console.log(newState.score);
-    },
-    init () {
-        const localData = localStorage.getItem("saved-state");
-        this.setState(JSON.parse(localData));
-    },
-    history () {
-        return this.data.history;
-    },
-    pushToHistory (play) {
-        const currentState = this.getState();
-        currentState.history.push({
-            jugador: play.myPlay,
-            bot: play.computerPlay
-        });
-    },
-    whoWins (myPlay, computerPlay) {
-        //const currentState = this.getState().score;
-        const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
-        const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
-        const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
-        const empateConPapel = myPlay == "papel" && computerPlay == "papel";
-        const empateConPiedra = myPlay == "piedra" && computerPlay == "piedra";
-        const empateContijera = myPlay == "tijera" && computerPlay == "tijera";
-        const gane = [
-            ganeConPapel,
-            ganeConPiedra,
-            ganeConTijeras
-        ];
-        const empate = [
-            empateConPapel,
-            empateConPiedra,
-            empateContijera
-        ];
-        if (gane.includes(true)) //currentState.jugador ++
-        return "ganaste";
-        else if (empate.includes(true)) return "empate";
-        else //currentState.bot++
-        return "perdiste";
-    },
-    setMove (move) {
-        const currentState = this.getState();
-        currentState.currentGame.myPlay;
-    },
-    subscribe (callback) {
-        return this.listener.push(callback);
-    }
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule') return;
-        // Skip duplicate re-exports when they have the same value.
-        if (key in dest && dest[key] === source[key]) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"7XTfo":[function(require,module,exports) {
+},{"./helpers/bundle-url":"8YnfL"}],"7XTfo":[function(require,module,exports) {
 var _router = require("../../router");
 const papel = require("url:../../img/papel.png");
 const piedra = require("url:../../img/piedra.png");
@@ -856,33 +1005,6 @@ class winnerPage extends HTMLElement {
 }
 customElements.define("winner-el", winnerPage);
 
-},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"jlL4W":[function(require,module,exports) {
-var _router = require("../../router");
-const papel = require("url:../../img/papel.png");
-const piedra = require("url:../../img/piedra.png");
-const tijera = require("url:../../img/tijera.png");
-class drawPage extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-    }
-    connectedCallback() {
-        this.render();
-        const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-    render() {
-        this.shadow.innerHTML = `\n       <div class="container">\n       <empataste-el></empataste-el>\n       <tablero-el></tablero-el>\n       `;
-        setTimeout(function() {
-            _router.goto("/rules");
-        }, 1500);
-    }
-}
-customElements.define("draw-el", drawPage);
-
 },{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"gXfgD":[function(require,module,exports) {
 var _router = require("../../router");
 const papel = require("url:../../img/papel.png");
@@ -911,41 +1033,12 @@ class loserPage extends HTMLElement {
 }
 customElements.define("loser-el", loserPage);
 
-},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"2KzZN":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-class Contador extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-        this.contador = 3;
-    }
-    connectedCallback() {
-        this.render();
-        const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .contador{\n            display: flex;\n            justify-content:center;\n            align-items:center;\n            height: 243px;\n            width: 243px;\n            font-size: 72px;\n            font-weight:700;\n            border: 23px solid #000;\n            border-radius: 150px;\n            margin:125px auto 0 auto;\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-    render() {
-        //aca va el custom el de las jugadas se pueden definir por custom-el
-        //o por atributos
-        this.shadow.innerHTML = `\n       <div class = "contador"></div>\n\n      `;
-        var tiempo = this.shadow.querySelector(".contador");
-        var numero = 4;
-        var algo = setInterval(cuentaRegresiva, 1000);
-        function cuentaRegresiva(number) {
-            numero--;
-            if (numero == 0) clearInterval(algo);
-            tiempo.innerHTML = `${numero}`;
-        }
-    }
-}
-customElements.define("contador-el", Contador);
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"g4sMT":[function(require,module,exports) {
-class Boton extends HTMLElement {
+},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}],"jlL4W":[function(require,module,exports) {
+var _router = require("../../router");
+const papel = require("url:../../img/papel.png");
+const piedra = require("url:../../img/piedra.png");
+const tijera = require("url:../../img/tijera.png");
+class drawPage extends HTMLElement {
     constructor(){
         super();
         this.shadow = this.attachShadow({
@@ -955,105 +1048,18 @@ class Boton extends HTMLElement {
     connectedCallback() {
         this.render();
         const style = document.createElement("style");
-        style.innerHTML = `\n     \n        .boton{\n            display: block;\n            margin:0 auto 86px auto;\n            width:322px;\n            border: 10px solid #001997;\n            height:87px;\n            background: #006CFC;\n            border-radius:10px;\n            font-size:45px;\n            line-height:50px;\n            color: #D8FCFC;\n        }\n        \n        `;
+        style.innerHTML = `\n     \n        .container{\n            position:absolute;\n            top:0;\n            left:0;\n            bottom:0;\n            right:0;\n            background: rgba(136, 137, 73, 0.9); ;\n        }\n        \n        `;
         this.shadow.appendChild(style);
     }
     render() {
-        const texto = this.textContent;
-        this.shadow.innerHTML = `\n        <button class="boton">${texto}</button>\n\n      `;
+        this.shadow.innerHTML = `\n       <div class="container">\n       <empataste-el></empataste-el>\n       <tablero-el></tablero-el>\n       `;
+        setTimeout(function() {
+            _router.goto("/rules");
+        }, 1500);
     }
 }
-customElements.define("btn-el", Boton);
+customElements.define("draw-el", drawPage);
 
-},{}],"4VD01":[function(require,module,exports) {
-const ganador = require("url:../../img/ganaste.png");
-class Estrella extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-        this.render();
-    }
-    render() {
-        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Ganaste</h1>\n            <img class= "estrella"  src="${ganador}" alt="estrella">\n        </div>\n        \n\n        `;
-        const style = document.createElement("style");
-        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }   \n    `;
-        this.shadow.appendChild(style);
-    }
-}
-customElements.define("ganaste-el", Estrella);
-
-},{"url:../../img/ganaste.png":"jMfYt"}],"jMfYt":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "ganaste.f9f1f8cd.png";
-
-},{"./helpers/bundle-url":"8YnfL"}],"5vuP3":[function(require,module,exports) {
-var _state = require("../../state");
-const tablero = require("url:../../img/rectangle.png");
-class Resultado extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-        this.render();
-    }
-    render() {
-        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.getState().score.jugador}</p>\n            <p class = "p">Máquina:${_state.state.getState().score.bot}</p>\n        </div>\n       \n\n        `;
-        const style = document.createElement("style");
-        style.innerHTML = `\n      \n        .tablero{\n            display:block;\n            margin:11px auto;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 55px;\n            margin-bottom:0;\n        }\n        .p{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 45px;\n            margin-bottom:0;\n            margin-top:0;\n            text-align:end;\n        }\n        .contenedor{\n            position:absolute;\n            top:410px;\n            left:50%; \n            transform:translate(-50%, -50%);\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-}
-customElements.define("tablero-el", Resultado);
-
-},{"url:../../img/rectangle.png":"1X6Cx","../../state":"28XHA"}],"1X6Cx":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "rectangle.a4eaf4ed.png";
-
-},{"./helpers/bundle-url":"8YnfL"}],"9BAgK":[function(require,module,exports) {
-const perdedor = require("url:../../img/perdiste.png");
-class Estrellas extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-        this.render();
-    }
-    render() {
-        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Perdiste</h1>\n            <img class= "estrella"  src="${perdedor}" alt="estrella">\n        </div>\n    `;
-        const style = document.createElement("style");
-        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }   \n        `;
-        this.shadow.appendChild(style);
-    }
-}
-customElements.define("perdiste-el", Estrellas);
-
-},{"url:../../img/perdiste.png":"32d2U"}],"32d2U":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "perdiste.914ceaae.png";
-
-},{"./helpers/bundle-url":"8YnfL"}],"lFAOC":[function(require,module,exports) {
-const empate = require("url:../../img/empataste.png");
-class Estrellae extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-        this.render();
-    }
-    render() {
-        this.shadow.innerHTML = `\n        <div class="contenedor">\n            <h1 class="titulo">Empate</h1>\n            <img class= "estrella"  src="${empate}" alt="estrella">\n        </div>\n    `;
-        const style = document.createElement("style");
-        style.innerHTML = `\n        .contenedor{\n            width:200px;\n            height:200px;\n            display:flex;\n            flex-direction:column;\n            justify-content:center;\n            align-items:center;\n            margin:50px auto ;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size:55px;\n            color:#fff;\n            position: absolute;\n            letter-spacing: 0.05em;\n            margin: auto auto;\n        }  \n        \n        `;
-        this.shadow.appendChild(style);
-    }
-}
-customElements.define("empataste-el", Estrellae);
-
-},{"url:../../img/empataste.png":"hjz6O"}],"hjz6O":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "empataste.8e51d2b6.png";
-
-},{"./helpers/bundle-url":"8YnfL"}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
+},{"url:../../img/papel.png":"fTpqS","url:../../img/piedra.png":"j1GzX","url:../../img/tijera.png":"9JARl","../../router":"b2iia"}]},["8uBhv","4aleK"], "4aleK", "parcelRequireca0a")
 
 //# sourceMappingURL=index.b31310b1.js.map

@@ -30,7 +30,7 @@ const state = {
                  cb(newState);
              }
              localStorage.setItem("saved-state",JSON.stringify(newState))
-             console.log(newState.score)
+           
         },
         init(){
             const localData =  localStorage.getItem("saved-state");
