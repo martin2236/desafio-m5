@@ -34,7 +34,10 @@ const state = {
         },
         init(){
             const localData =  localStorage.getItem("saved-state");
-            this.setState(JSON.parse(localData))
+            if(localData){
+                this.setState(JSON.parse(localData))
+            }
+            
           },
         history(){
         return this.data.history

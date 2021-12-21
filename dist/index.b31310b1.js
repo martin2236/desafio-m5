@@ -470,7 +470,7 @@ window.addEventListener("load", ()=>{
     _router.goto(path);
 });
 
-},{"./components/contador/contador":"2KzZN","./components/boton/index":"g4sMT","./components/estrellas/ganador":"4VD01","./components/resultados/tablero":"5vuP3","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./state":"28XHA","./router":"b2iia"}],"2KzZN":[function(require,module,exports) {
+},{"./components/contador/contador":"2KzZN","./state":"28XHA","./components/boton/index":"g4sMT","./components/estrellas/ganador":"4VD01","./components/estrellas/perdedor":"9BAgK","./components/estrellas/empate":"lFAOC","./components/resultados/tablero":"5vuP3","./router":"b2iia"}],"2KzZN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class Contador extends HTMLElement {
@@ -535,7 +535,85 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"g4sMT":[function(require,module,exports) {
+},{}],"28XHA":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state
+);
+const state = {
+    data: {
+        currentGame: {
+            myPlay: "",
+            computerPlay: ""
+        },
+        score: {
+            jugador: 0,
+            bot: 0
+        },
+        history: [
+            {
+                jugador: "",
+                bot: ""
+            }
+        ]
+    },
+    listener: [],
+    getState () {
+        return this.data;
+    },
+    setState (newState) {
+        this.data = newState;
+        for (const cb of this.listener)cb(newState);
+        localStorage.setItem("saved-state", JSON.stringify(newState));
+    },
+    init () {
+        const localData = localStorage.getItem("saved-state");
+        if (localData) this.setState(JSON.parse(localData));
+    },
+    history () {
+        return this.data.history;
+    },
+    pushToHistory (play) {
+        const currentState = this.getState();
+        currentState.history.push({
+            jugador: play.myPlay,
+            bot: play.computerPlay
+        });
+    },
+    whoWins (myPlay, computerPlay) {
+        //const currentState = this.getState().score;
+        const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
+        const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
+        const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
+        const empateConPapel = myPlay == "papel" && computerPlay == "papel";
+        const empateConPiedra = myPlay == "piedra" && computerPlay == "piedra";
+        const empateContijera = myPlay == "tijera" && computerPlay == "tijera";
+        const gane = [
+            ganeConPapel,
+            ganeConPiedra,
+            ganeConTijeras
+        ];
+        const empate = [
+            empateConPapel,
+            empateConPiedra,
+            empateContijera
+        ];
+        if (gane.includes(true)) //currentState.jugador ++
+        return "ganaste";
+        else if (empate.includes(true)) return "empate";
+        else //currentState.bot++
+        return "perdiste";
+    },
+    setMove (move) {
+        const currentState = this.getState();
+        currentState.currentGame.myPlay;
+    },
+    subscribe (callback) {
+        return this.listener.push(callback);
+    }
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"g4sMT":[function(require,module,exports) {
 class Boton extends HTMLElement {
     constructor(){
         super();
@@ -613,108 +691,7 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"5vuP3":[function(require,module,exports) {
-var _state = require("../../state");
-const tablero = require("url:../../img/rectangle.png");
-class Resultado extends HTMLElement {
-    constructor(){
-        super();
-        this.shadow = this.attachShadow({
-            mode: "open"
-        });
-        this.render();
-    }
-    render() {
-        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.getState().score.jugador}</p>\n            <p class = "p">Máquina:${_state.state.getState().score.bot}</p>\n        </div>\n       \n\n        `;
-        const style = document.createElement("style");
-        style.innerHTML = `\n      \n        .tablero{\n            display:block;\n            margin:11px auto;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 55px;\n            margin-bottom:0;\n        }\n        .p{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 45px;\n            margin-bottom:0;\n            margin-top:0;\n            text-align:end;\n        }\n        .contenedor{\n            position:absolute;\n            top:410px;\n            left:50%; \n            transform:translate(-50%, -50%);\n        }\n        \n        `;
-        this.shadow.appendChild(style);
-    }
-}
-customElements.define("tablero-el", Resultado);
-
-},{"url:../../img/rectangle.png":"1X6Cx","../../state":"28XHA"}],"1X6Cx":[function(require,module,exports) {
-module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "rectangle.a4eaf4ed.png";
-
-},{"./helpers/bundle-url":"8YnfL"}],"28XHA":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "state", ()=>state
-);
-const state = {
-    data: {
-        currentGame: {
-            myPlay: "",
-            computerPlay: ""
-        },
-        score: {
-            jugador: 0,
-            bot: 0
-        },
-        history: [
-            {
-                jugador: "",
-                bot: ""
-            }
-        ]
-    },
-    listener: [],
-    getState () {
-        return this.data;
-    },
-    setState (newState) {
-        this.data = newState;
-        for (const cb of this.listener)cb(newState);
-        localStorage.setItem("saved-state", JSON.stringify(newState));
-    },
-    init () {
-        const localData = localStorage.getItem("saved-state");
-        this.setState(JSON.parse(localData));
-    },
-    history () {
-        return this.data.history;
-    },
-    pushToHistory (play) {
-        const currentState = this.getState();
-        currentState.history.push({
-            jugador: play.myPlay,
-            bot: play.computerPlay
-        });
-    },
-    whoWins (myPlay, computerPlay) {
-        //const currentState = this.getState().score;
-        const ganeConTijeras = myPlay == "tijera" && computerPlay == "papel";
-        const ganeConPiedra = myPlay == "piedra" && computerPlay == "tijera";
-        const ganeConPapel = myPlay == "papel" && computerPlay == "piedra";
-        const empateConPapel = myPlay == "papel" && computerPlay == "papel";
-        const empateConPiedra = myPlay == "piedra" && computerPlay == "piedra";
-        const empateContijera = myPlay == "tijera" && computerPlay == "tijera";
-        const gane = [
-            ganeConPapel,
-            ganeConPiedra,
-            ganeConTijeras
-        ];
-        const empate = [
-            empateConPapel,
-            empateConPiedra,
-            empateContijera
-        ];
-        if (gane.includes(true)) //currentState.jugador ++
-        return "ganaste";
-        else if (empate.includes(true)) return "empate";
-        else //currentState.bot++
-        return "perdiste";
-    },
-    setMove (move) {
-        const currentState = this.getState();
-        currentState.currentGame.myPlay;
-    },
-    subscribe (callback) {
-        return this.listener.push(callback);
-    }
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"9BAgK":[function(require,module,exports) {
+},{}],"9BAgK":[function(require,module,exports) {
 const perdedor = require("url:../../img/perdiste.png");
 class Estrellas extends HTMLElement {
     constructor(){
@@ -757,6 +734,29 @@ customElements.define("empataste-el", Estrellae);
 
 },{"url:../../img/empataste.png":"hjz6O"}],"hjz6O":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "empataste.8e51d2b6.png";
+
+},{"./helpers/bundle-url":"8YnfL"}],"5vuP3":[function(require,module,exports) {
+var _state = require("../../state");
+const tablero = require("url:../../img/rectangle.png");
+class Resultado extends HTMLElement {
+    constructor(){
+        super();
+        this.shadow = this.attachShadow({
+            mode: "open"
+        });
+        this.render();
+    }
+    render() {
+        this.shadow.innerHTML = `\n        \n        <img class="tablero"  src="${tablero}" alt="tablero">\n        <div class="contenedor">\n            <h1 class = "titulo">Record</h1>\n            <p class = "p">Vos:${_state.state.getState().score.jugador}</p>\n            <p class = "p">Máquina:${_state.state.getState().score.bot}</p>\n        </div>\n       \n\n        `;
+        const style = document.createElement("style");
+        style.innerHTML = `\n      \n        .tablero{\n            display:block;\n            margin:11px auto;\n        }\n        .titulo{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 55px;\n            margin-bottom:0;\n        }\n        .p{\n            font-family: 'Odibee Sans', cursive;\n            font-size: 45px;\n            margin-bottom:0;\n            margin-top:0;\n            text-align:end;\n        }\n        .contenedor{\n            position:absolute;\n            top:410px;\n            left:50%; \n            transform:translate(-50%, -50%);\n        }\n        \n        `;
+        this.shadow.appendChild(style);
+    }
+}
+customElements.define("tablero-el", Resultado);
+
+},{"../../state":"28XHA","url:../../img/rectangle.png":"1X6Cx"}],"1X6Cx":[function(require,module,exports) {
+module.exports = require('./helpers/bundle-url').getBundleURL('Z8Pbo') + "rectangle.a4eaf4ed.png";
 
 },{"./helpers/bundle-url":"8YnfL"}],"b2iia":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -868,6 +868,7 @@ class GamePage extends HTMLElement {
                 reloj.remove();
                 //le paso los valores de la jugada al currentGame
                 const lastState = _state.state.getState();
+                console.log(lastState);
                 // consulta con el estado quien gano y muestra el componente correspondiente
                 if (_state.state.whoWins(miOpcion, computerMove) == "ganaste") {
                     lastState.score.jugador++;

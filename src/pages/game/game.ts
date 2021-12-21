@@ -131,7 +131,7 @@ class GamePage extends HTMLElement{
         
                 //le paso los valores de la jugada al currentGame
                 const lastState = state.getState()
-          
+                console.log(lastState)
                 
                 // consulta con el estado quien gano y muestra el componente correspondiente
                 if (state.whoWins(miOpcion,computerMove)=="ganaste"){
