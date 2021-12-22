@@ -39,12 +39,12 @@ class Contador extends HTMLElement{
       `
         var tiempo = this.shadow.querySelector(".contador")
         var numero = 4
-        var algo = setInterval(cuentaRegresiva,1000)
+        var contador = setInterval(cuentaRegresiva,1000)
         
         function cuentaRegresiva(number){
             numero--
             if (numero == 0){
-                clearInterval(algo)
+                clearInterval(contador)
             }
             tiempo.innerHTML = `${numero}`
 

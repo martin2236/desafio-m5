@@ -493,10 +493,10 @@ class Contador extends HTMLElement {
         this.shadow.innerHTML = `\n       <div class = "contador"></div>\n\n      `;
         var tiempo = this.shadow.querySelector(".contador");
         var numero = 4;
-        var algo = setInterval(cuentaRegresiva, 1000);
+        var contador = setInterval(cuentaRegresiva, 1000);
         function cuentaRegresiva(number) {
             numero--;
-            if (numero == 0) clearInterval(algo);
+            if (numero == 0) clearInterval(contador);
             tiempo.innerHTML = `${numero}`;
         }
     }
@@ -859,6 +859,17 @@ class GamePage extends HTMLElement {
         const ganaste = this.shadow.querySelector(".ganaste");
         const perdiste = this.shadow.querySelector(".perdiste");
         const empataste = this.shadow.querySelector(".empate");
+        //contador sincronizado con el componente
+        var numero = 4;
+        var contador = setInterval(cuentaRegresiva, 1000);
+        function cuentaRegresiva(number) {
+            numero--;
+            if (numero == 0) {
+                clearInterval(contador);
+                _router.goto("/rules");
+            }
+            console.log(numero);
+        }
         //itera los elementos img
         manos.forEach((item)=>{
             item.addEventListener("click", function(e) {
@@ -871,6 +882,7 @@ class GamePage extends HTMLElement {
                 //si se hace click en una opcion remueve el elemento contador
                 //si contador llega a 0 reinicia el juego 
                 reloj.remove();
+                clearInterval(contador);
                 //le paso los valores de la jugada al currentGame
                 const lastState = _state.state.getState();
                 console.log(lastState);
