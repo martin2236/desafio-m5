@@ -70,6 +70,7 @@ const state = {
                 //currentState.bot++
                 return "perdiste"
             }
+            console.log(myPlay, computerPlay)
            
         },
         setMove(move:Jugada){

@@ -603,6 +603,7 @@ const state = {
         else if (empate.includes(true)) return "empate";
         else //currentState.bot++
         return "perdiste";
+        console.log(myPlay, computerPlay);
     },
     setMove (move) {
         const currentState = this.getState();
@@ -825,18 +826,22 @@ const tijera = require("url:../../img/tijera.png");
 class GamePage extends HTMLElement {
     constructor(){
         super();
-        this.opcionesDelBot = [
+        this.manoDelBot = [
             papel,
             piedra,
             tijera
         ];
+        this.opcionesDelBot = [
+            "papel",
+            "piedra",
+            "tijera"
+        ];
         this.shadow = this.attachShadow({
             mode: "open"
         });
-        var random = Math.floor(Math.random() * this.opcionesDelBot.length);
-        this.jugadaDelBot = this.opcionesDelBot[random];
-        var direccion = this.jugadaDelBot.split("/");
-        this.alt = direccion[3].split(".")[0];
+        var random = Math.floor(Math.random() * this.manoDelBot.length);
+        this.urlJugadaDelBot = this.manoDelBot[random];
+        this.alt = this.opcionesDelBot[random];
     }
     connectedCallback() {
         this.render();
@@ -847,7 +852,7 @@ class GamePage extends HTMLElement {
     render() {
         //aca va el custom el de las jugadas se pueden definir por custom-el
         //o por atributos
-        this.shadow.innerHTML = `\n        <div class= "container">\n            <contador-el class="reloj">4</contador-el>\n            <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">\n            <div class="hand-cont">\n                <img class= "opcion"  src="${papel} " alt="papel">\n                <img class = "opcion" src="${piedra} " alt="piedra">\n                <img class="opcion" src="${tijera} " alt="tijera">\n            </div>\n            \n        </div>\n       \n      `;
+        this.shadow.innerHTML = `\n        <div class= "container">\n            <contador-el class="reloj">4</contador-el>\n            <img class= "bot"  src="${this.urlJugadaDelBot} " alt="${this.alt}">\n            <div class="hand-cont">\n                <img class= "opcion"  src="${papel} " alt="papel">\n                <img class = "opcion" src="${piedra} " alt="piedra">\n                <img class="opcion" src="${tijera} " alt="tijera">\n            </div>\n            \n        </div>\n       \n      `;
         var manos = this.shadow.querySelectorAll(".opcion");
         const botOpcion = this.shadow.querySelector(".bot");
         const reloj = this.shadow.querySelector(".reloj");

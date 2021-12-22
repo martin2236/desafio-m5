@@ -6,17 +6,17 @@ import {state} from"../../state"
 
 class GamePage extends HTMLElement{
     shadow:ShadowRoot
-    opcionesDelBot:string[]= [papel, piedra, tijera]
-    jugadaDelBot: string
+    manoDelBot:string[]= [papel, piedra, tijera]
+    opcionesDelBot:string[]= ["papel", "piedra", "tijera"]
+    urlJugadaDelBot: string
     alt:string
 
     constructor(){
         super()
         this.shadow = this.attachShadow({mode:"open"})
-        var random = Math.floor(Math.random() * this.opcionesDelBot.length)
-        this.jugadaDelBot = this.opcionesDelBot[random]
-        var direccion = this.jugadaDelBot.split("/")
-        this.alt=direccion[3].split(".")[0]
+        var random = Math.floor(Math.random() * this.manoDelBot.length)
+        this.urlJugadaDelBot = this.manoDelBot[random]
+        this.alt = this.opcionesDelBot[random]
     }
     connectedCallback(){
     this.render()
@@ -95,7 +95,7 @@ class GamePage extends HTMLElement{
         this.shadow.innerHTML=`
         <div class= "container">
             <contador-el class="reloj">4</contador-el>
-            <img class= "bot"  src="${this.jugadaDelBot} " alt="${this.alt}">
+            <img class= "bot"  src="${this.urlJugadaDelBot} " alt="${this.alt}">
             <div class="hand-cont">
                 <img class= "opcion"  src="${papel} " alt="papel">
                 <img class = "opcion" src="${piedra} " alt="piedra">
