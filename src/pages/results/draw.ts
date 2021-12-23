@@ -29,13 +29,17 @@ class drawPage extends HTMLElement{
     }
 
     render(){
-        
         this.shadow.innerHTML=`
        <div class="container">
        <empataste-el></empataste-el>
        <tablero-el></tablero-el>
-       `
-       setTimeout(function(){goto("/rules")  }, 1500);
+       <btn-el href="/rules" class= "boton">Volver a jugar</btn-el>
+       </div>
+    `
+    const boton = this.shadow.querySelector(".boton")
+    boton.addEventListener("click",function(e){
+        goto("/rules")
+      })
     }
 }
 customElements.define("draw-el",drawPage)

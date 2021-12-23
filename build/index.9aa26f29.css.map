@@ -1,0 +1,1 @@
+{"mappings":"AAAA,EACI,yDACJ,CACA,WACI,YACJ","sources":["src/index.css"],"sourcesContent":["*{\r\n    background-image: url(./img/fondo.png);\r\n}\r\n.container{\r\n    height: 100vh;\r\n}"],"names":[],"version":3,"file":"index.9aa26f29.css.map"}

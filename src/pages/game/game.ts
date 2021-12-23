@@ -54,7 +54,6 @@ class GamePage extends HTMLElement{
            position : absolute;
            top:-80px;
            left: 35%;
-           
            margin-top:80px;
            height: 235px;
        }
